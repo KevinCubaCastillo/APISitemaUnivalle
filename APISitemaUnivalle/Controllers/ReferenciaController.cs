@@ -70,7 +70,7 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Referencia.Where(p => !p.Estado); // Filtra por estado inactivo
+                var datos = _context.Referencia.Where(p => !p.Estado);
                 if (!datos.Any())
                 {
                     oResponse.message = "No se encontraron referencias inactivas";
