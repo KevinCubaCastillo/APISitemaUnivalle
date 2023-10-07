@@ -136,7 +136,7 @@ namespace APISitemaUnivalle.Controllers
 
         }
         [HttpPut("UpdatePublicaciones")]
-        public IActionResult editarCliente(Publicacion_edit_Request oPublicacion, int id)
+        public IActionResult UpdatePublicaciones(Publicacion_edit_Request oPublicacion, int id)
         {
             Response oResponse = new Response();
             try
