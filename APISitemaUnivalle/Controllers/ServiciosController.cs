@@ -125,6 +125,35 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpGet("getServicioByModuloId/{id}")]
+        public IActionResult getServicioByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Where(i => i.Estado == true && i.ModuloId == id).Select(i => new
+                {
+                    identificador = i.Id,
+                    nombre = i.Nombre,
+                    modulo = i.Modulo.Nombremodulo,
+                    imagen = i.ImagenUrl
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return BadRequest(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
         [HttpPost ("addServicio")]
         public IActionResult addServicio(servicio_add_request oModel)
         {
