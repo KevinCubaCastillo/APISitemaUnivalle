@@ -3,6 +3,7 @@ using APISitemaUnivalle.Models.Request.Servicios;
 using APISitemaUnivalle.Models.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APISitemaUnivalle.Controllers
 {
@@ -109,6 +110,29 @@ namespace APISitemaUnivalle.Controllers
             try
             {
                 var datos = _context.Servicios.Find(id);
+                if (datos == null)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getServicioByModule/{name}")]
+        public IActionResult getServicioByModule(string name)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Where(e => e.Modulo.Nombremodulo.Equals(name));
                 if (datos == null)
                 {
                     oResponse.message = "No se encontraron datos";
