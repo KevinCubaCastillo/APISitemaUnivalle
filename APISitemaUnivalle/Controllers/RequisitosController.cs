@@ -167,14 +167,17 @@ namespace APISitemaUnivalle.Controllers
                         requisito.Estado = true;
                         _context.Requisitos.Add(requisito);
                         _context.SaveChanges();
-                        foreach(var paso in oModel.pasos)
+                        if(oModel.pasos != null)
                         {
-                            PasosRequisito pasosReq = new PasosRequisito();
-                            pasosReq.Nombre = paso.Nombre;
-                            pasosReq.RequisitosId = requisito.Id;
-                            pasosReq.Estado = true;
-                            _context.PasosRequisitos.Add(pasosReq);
-                            _context.SaveChanges();
+                            foreach (var paso in oModel.pasos)
+                            {
+                                PasosRequisito pasosReq = new PasosRequisito();
+                                pasosReq.Nombre = paso.Nombre;
+                                pasosReq.RequisitosId = requisito.Id;
+                                pasosReq.Estado = true;
+                                _context.PasosRequisitos.Add(pasosReq);
+                                _context.SaveChanges();
+                            }
                         }
                         transaction.Commit();
                         oresponse.success = 1;
