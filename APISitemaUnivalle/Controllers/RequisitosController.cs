@@ -293,5 +293,44 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+
+
+
+
+        [HttpGet("getRequisitosbyServicioId/{id}")]
+        public IActionResult getRequisitosbyServicioId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Requisitos.Where(r => r.Estado == true && r.ServiciosId == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
     }
 }
