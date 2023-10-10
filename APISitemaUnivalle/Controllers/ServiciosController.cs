@@ -110,7 +110,7 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Include(e => e.Ubicaciones).Include(e => e.Referencia).Where(e=> e.Id == id);
+                var datos = _context.Servicios.Where(i => i.Estado == true).Include(e => e.Ubicaciones).Include(e => e.Referencia).Where(e=> e.Id == id);
                 if (datos == null)
                 {
                     oResponse.message = "No se encontraron datos";
@@ -208,6 +208,7 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
         [HttpPut("deleteServicio/{id}")]
