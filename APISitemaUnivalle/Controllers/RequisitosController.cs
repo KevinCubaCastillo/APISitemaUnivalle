@@ -293,10 +293,6 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-
-
-
-
         [HttpGet("getRequisitosbyServicioId/{id}")]
         public IActionResult getRequisitosbyServicioId(int id)
         {
@@ -323,7 +319,7 @@ namespace APISitemaUnivalle.Controllers
                 }
                 oResponse.data = datos;
                 oResponse.success = 1;
-                oResponse.message = "Solicitud realizado con exito";
+                oResponse.message = "Solicitud realizada con exito";
             }
             catch (Exception ex)
             {

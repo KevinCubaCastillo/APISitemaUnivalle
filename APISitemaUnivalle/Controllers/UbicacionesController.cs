@@ -130,6 +130,37 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpGet("getUbicacionesbyServicioId/{id}")]
+        public IActionResult getUbicacionesbyServicioId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Ubicaciones.Where(r => r.Estado == true && r.ServiciosId == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    i.Imagen,
+                    i.Video,
+                    servicio = i.Servicios.Nombre,
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
 
         [HttpPost("addUbicaciones")]
         public IActionResult addUbicaciones(ubicacion_add_request UbicacionModel)
