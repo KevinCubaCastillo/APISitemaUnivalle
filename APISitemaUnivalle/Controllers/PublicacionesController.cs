@@ -116,9 +116,7 @@ namespace APISitemaUnivalle.Controllers
                 {
                     Identificador = i.Id,
                     i.Archivo,
-                    i.Descripcion1,
                     i.Titulo,
-                    i.Descripcion2,
                     servicio = i.Servicios.Nombre,
                 });
                 if (datos.Count() == 0)
@@ -147,10 +145,8 @@ namespace APISitemaUnivalle.Controllers
                 Publicacion npublicacion = new Publicacion();
                 //npublicacion.Id = oPublicacion.Id;
                 npublicacion.Archivo = oPublicacion.Archivo;
-                npublicacion.Descripcion1 = oPublicacion.Descripcion1;
                 npublicacion.ServiciosId = oPublicacion.ServiciosId;
                 npublicacion.Titulo = oPublicacion.Titulo;
-                npublicacion.Descripcion2 = oPublicacion.Descripcion2;
                 npublicacion.Estado = oPublicacion.Estado;
                 _context.Publicacions.Add(npublicacion);
                 _context.SaveChanges();
@@ -180,11 +176,8 @@ namespace APISitemaUnivalle.Controllers
                     return Ok(oResponse);
                 }
                 publicacion.Archivo = oPublicacion.Archivo;
-                publicacion.Descripcion1 = oPublicacion.Descripcion1;
                 publicacion.ServiciosId = oPublicacion.ServiciosId;
                 publicacion.Titulo = oPublicacion.Titulo;
-                publicacion.Descripcion2 = oPublicacion.Descripcion2;
-
                 _context.Publicacions.Update(publicacion);
                 _context.SaveChanges();
                 oResponse.message = "editado con exito";

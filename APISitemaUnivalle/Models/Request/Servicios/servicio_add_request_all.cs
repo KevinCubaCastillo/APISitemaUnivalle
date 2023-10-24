@@ -10,6 +10,8 @@ namespace APISitemaUnivalle.Models.Request.Servicios
         public string Nombre { get; set; } = null!;
         public int ModuloId { get; set; }
         public string? ImagenUrl { get; set; }
+        public int? IdCategoria { get; set; }
+
         public ubicacion_add_request? ubicacionAdd { get; set; }
         public Referencias_add_Request? referenciaAdd { get; set; }
         public requisito_add_request? requisitoAdd { get; set; }

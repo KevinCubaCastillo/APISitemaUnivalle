@@ -133,6 +133,7 @@ namespace APISitemaUnivalle.Controllers
                 }
                 Modulo modulo = new Modulo();
                 modulo.Nombremodulo = oModel.Nombremodulo;
+                modulo.CiUsuario = oModel.CiUsuario;
                 modulo.Estado = true;
                 _context.Modulos.Add(modulo);
                 _context.SaveChanges();

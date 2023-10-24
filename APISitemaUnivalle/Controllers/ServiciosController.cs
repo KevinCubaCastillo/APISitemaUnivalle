@@ -26,6 +26,7 @@ namespace APISitemaUnivalle.Controllers
                     identificador = i.Id,
                     nombre = i.Nombre,
                     modulo = i.Modulo.Nombremodulo,
+                    Categoria = i.IdCategoriaNavigation.Descripcion,
                     imagen = i.ImagenUrl
                 });
                 if(datos.Count() == 0)
