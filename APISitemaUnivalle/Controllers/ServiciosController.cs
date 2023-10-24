@@ -272,7 +272,7 @@ namespace APISitemaUnivalle.Controllers
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        oResponse.message = ex.InnerException.Message;
+                        oResponse.message = ex.Message;
                         return BadRequest(oResponse);
                     }
                 }
