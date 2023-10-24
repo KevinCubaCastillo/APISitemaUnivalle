@@ -32,7 +32,7 @@ namespace APISitemaUnivalle.Controllers
                     {
                         Identificador = d.Id,
                         d.Nombre,
-                        Requisito = d.Requisitos.Descripcion,,
+                        Requisito = d.Requisitos.Descripcion,
                         d.Estado
                     })
                 });
