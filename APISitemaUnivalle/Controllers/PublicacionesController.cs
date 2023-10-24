@@ -118,7 +118,8 @@ namespace APISitemaUnivalle.Controllers
                     i.Archivo,
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo
+                    modulo = i.Modulo.Nombremodulo,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {

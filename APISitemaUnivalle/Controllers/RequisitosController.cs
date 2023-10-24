@@ -27,11 +27,13 @@ namespace APISitemaUnivalle.Controllers
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
                     modulo = i.Modulo.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
-                        Requisito = d.Requisitos.Descripcion,
+                        Requisito = d.Requisitos.Descripcion,,
+                        d.Estado
                     })
                 });
                 if(datos.Count() == 0)
@@ -62,11 +64,13 @@ namespace APISitemaUnivalle.Controllers
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
                     modulo = i.Modulo.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -97,11 +101,13 @@ namespace APISitemaUnivalle.Controllers
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
                     modulo = i.Modulo.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -132,11 +138,13 @@ namespace APISitemaUnivalle.Controllers
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
                     modulo = i.Modulo.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)

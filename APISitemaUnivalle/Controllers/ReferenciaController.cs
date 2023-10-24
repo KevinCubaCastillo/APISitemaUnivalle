@@ -126,7 +126,8 @@ namespace APISitemaUnivalle.Controllers
                     i.Nombre,
                     numero = i.Numerocel,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo
+                    modulo = i.Modulo.Nombremodulo,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {

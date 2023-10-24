@@ -147,7 +147,8 @@ namespace APISitemaUnivalle.Controllers
                     i.Imagen,
                     i.Video,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo
+                    modulo = i.Modulo.Nombremodulo,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {
