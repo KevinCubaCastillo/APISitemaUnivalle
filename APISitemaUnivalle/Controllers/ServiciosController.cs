@@ -27,7 +27,8 @@ namespace APISitemaUnivalle.Controllers
                     nombre = i.Nombre,
                     modulo = i.Modulo.Nombremodulo,
                     Categoria = i.IdCategoriaNavigation.Descripcion,
-                    imagen = i.ImagenUrl
+                    imagen = i.ImagenUrl,
+                    i.Estado
                 });
                 if(datos.Count() == 0)
                 {
@@ -56,7 +57,8 @@ namespace APISitemaUnivalle.Controllers
                     identificador = i.Id,
                     nombre = i.Nombre,
                     modulo = i.Modulo.Nombremodulo,
-                    imagen = i.ImagenUrl
+                    imagen = i.ImagenUrl,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {
@@ -85,7 +87,8 @@ namespace APISitemaUnivalle.Controllers
                     identificador = i.Id,
                     nombre = i.Nombre,
                     modulo = i.Modulo.Nombremodulo,
-                    imagen = i.ImagenUrl
+                    imagen = i.ImagenUrl,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {
@@ -137,7 +140,8 @@ namespace APISitemaUnivalle.Controllers
                     identificador = i.Id,
                     nombre = i.Nombre,
                     modulo = i.Modulo.Nombremodulo,
-                    imagen = i.ImagenUrl
+                    imagen = i.ImagenUrl,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {
