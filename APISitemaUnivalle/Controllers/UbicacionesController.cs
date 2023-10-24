@@ -54,7 +54,7 @@ namespace APISitemaUnivalle.Controllers
                     imagen = i.Imagen,
                     video = i.Video,
                     servicios_id = i.ServiciosId,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     estado = i.Estado
                 });
                 if (datos.Count() == 0)
@@ -85,7 +85,7 @@ namespace APISitemaUnivalle.Controllers
                     imagen = i.Imagen,
                     video = i.Video,
                     servicios_id = i.ServiciosId,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     estado = i.Estado
                 });
                 if (datos.Count() == 0)
@@ -116,7 +116,7 @@ namespace APISitemaUnivalle.Controllers
                     imagen = i.Imagen,
                     video = i.Video,
                     servicios_id = i.ServiciosId,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     estado = i.Estado
                 });
                 if (datos.Count() == 0)
@@ -147,7 +147,7 @@ namespace APISitemaUnivalle.Controllers
                     i.Imagen,
                     i.Video,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     i.Estado
                 });
                 if (datos.Count() == 0)
@@ -178,7 +178,7 @@ namespace APISitemaUnivalle.Controllers
                 ubicacion.Imagen = UbicacionModel.Imagen;
                 ubicacion.Video = UbicacionModel.Video;
                 ubicacion.ServiciosId = UbicacionModel.ServiciosId;
-                ubicacion.ModuloId = UbicacionModel.id_modulo;
+                ubicacion.IdModulo = UbicacionModel.id_modulo;
                 ubicacion.Estado = UbicacionModel.Estado;
           
                 _context.Ubicaciones.Add(ubicacion);
@@ -215,7 +215,7 @@ namespace APISitemaUnivalle.Controllers
                 ubicacion.Imagen = UbicacionModel.Imagen;
                 ubicacion.Video = UbicacionModel.Video;
                 ubicacion.ServiciosId = UbicacionModel.ServiciosId;
-                ubicacion.ModuloId = UbicacionModel.id_modulo;
+                ubicacion.IdModulo = UbicacionModel.id_modulo;
                 ubicacion.Estado = true;
 
                 _context.Ubicaciones.Update(ubicacion);

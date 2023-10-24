@@ -118,7 +118,7 @@ namespace APISitemaUnivalle.Controllers
                     i.Archivo,
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     i.Estado
                 });
                 if (datos.Count() == 0)
@@ -148,7 +148,7 @@ namespace APISitemaUnivalle.Controllers
                 //npublicacion.Id = oPublicacion.Id;
                 npublicacion.Archivo = oPublicacion.Archivo;
                 npublicacion.ServiciosId = oPublicacion.ServiciosId;
-                npublicacion.ModuloId = oPublicacion.id_modulo;
+                npublicacion.IdModulo = oPublicacion.id_modulo;
                 npublicacion.Titulo = oPublicacion.Titulo;
                 npublicacion.Estado = oPublicacion.Estado;
                 _context.Publicacions.Add(npublicacion);

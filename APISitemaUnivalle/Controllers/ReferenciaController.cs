@@ -126,7 +126,7 @@ namespace APISitemaUnivalle.Controllers
                     i.Nombre,
                     numero = i.Numerocel,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     i.Estado
                 });
                 if (datos.Count() == 0)
@@ -155,7 +155,7 @@ namespace APISitemaUnivalle.Controllers
                 nreferencia.Nombre = oreferencias.Nombre;
                 nreferencia.Numerocel = oreferencias.Numerocel;
                 nreferencia.ServiciosId = oreferencias.ServiciosId;
-                nreferencia.ModuloId = oreferencias.id_modulo;
+                nreferencia.IdModulo = oreferencias.id_modulo;
                 nreferencia.Estado= oreferencias.Estado;
 
                 _context.Referencia.Add(nreferencia);

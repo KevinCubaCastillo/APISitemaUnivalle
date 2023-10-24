@@ -107,11 +107,18 @@ namespace APISitemaUnivalle.Models
 
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(50)
                     .HasColumnName("nombre");
 
                 entity.Property(e => e.ServiciosId).HasColumnName("servicios_id");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.Carreras)
+                    .HasForeignKey(d => d.IdModulo)
+                    .HasConstraintName("id_modulo");
 
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Carreras)
@@ -238,11 +245,18 @@ namespace APISitemaUnivalle.Models
 
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
                 entity.Property(e => e.ServiciosId).HasColumnName("servicios_id");
 
                 entity.Property(e => e.Titulo)
                     .HasMaxLength(50)
                     .HasColumnName("titulo");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.Publicacions)
+                    .HasForeignKey(d => d.IdModulo)
+                    .HasConstraintName("id_modulo");
 
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Publicacions)
@@ -261,6 +275,8 @@ namespace APISitemaUnivalle.Models
 
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(50)
                     .HasColumnName("nombre");
@@ -270,6 +286,11 @@ namespace APISitemaUnivalle.Models
                     .HasColumnName("numerocel");
 
                 entity.Property(e => e.ServiciosId).HasColumnName("servicios_id");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.Referencia)
+                    .HasForeignKey(d => d.IdModulo)
+                    .HasConstraintName("id_modulo");
 
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Referencia)
@@ -292,7 +313,14 @@ namespace APISitemaUnivalle.Models
 
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
                 entity.Property(e => e.ServiciosId).HasColumnName("servicios_id");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.Requisitos)
+                    .HasForeignKey(d => d.IdModulo)
+                    .HasConstraintName("id_modulo");
 
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Requisitos)
@@ -345,11 +373,18 @@ namespace APISitemaUnivalle.Models
 
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
                 entity.Property(e => e.ServiciosId).HasColumnName("servicios_id");
 
                 entity.Property(e => e.Tiempotramite)
                     .HasMaxLength(30)
                     .HasColumnName("tiempotramite");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.Tramites)
+                    .HasForeignKey(d => d.IdModulo)
+                    .HasConstraintName("id_modulo");
 
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Tramites)
@@ -372,6 +407,8 @@ namespace APISitemaUnivalle.Models
 
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
                 entity.Property(e => e.Imagen)
                     .HasMaxLength(256)
                     .HasColumnName("imagen");
@@ -381,6 +418,11 @@ namespace APISitemaUnivalle.Models
                 entity.Property(e => e.Video)
                     .HasMaxLength(256)
                     .HasColumnName("video");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.Ubicaciones)
+                    .HasForeignKey(d => d.IdModulo)
+                    .HasConstraintName("id_modulo");
 
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Ubicaciones)

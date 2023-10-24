@@ -10,9 +10,9 @@ namespace APISitemaUnivalle.Models
         public string Numerocel { get; set; } = null!;
         public int ServiciosId { get; set; }
         public bool Estado { get; set; }
-        public int ModuloId { get; set; }
+        public int? IdModulo { get; set; }
 
-        public virtual Modulo Modulo { get; set; } = null!;
+        public virtual Modulo? IdModuloNavigation { get; set; }
         public virtual Servicio Servicios { get; set; } = null!;
     }
 }

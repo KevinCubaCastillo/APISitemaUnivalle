@@ -26,7 +26,7 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
@@ -63,7 +63,7 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
@@ -100,7 +100,7 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
@@ -137,7 +137,7 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
@@ -176,7 +176,7 @@ namespace APISitemaUnivalle.Controllers
                         Requisito requisito = new Requisito();
                         requisito.Descripcion = oModel.Descripcion;
                         requisito.ServiciosId = oModel.ServiciosId;
-                        requisito.ModuloId = oModel.id_modulo;
+                        requisito.IdModulo = oModel.id_modulo;
                         requisito.Estado = true;
                         _context.Requisitos.Add(requisito);
                         _context.SaveChanges();
