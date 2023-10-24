@@ -15,7 +15,9 @@ namespace APISitemaUnivalle.Models
         public int ServiciosId { get; set; }
         public string Titulo { get; set; } = null!;
         public bool Estado { get; set; }
+        public int ModuloId { get; set; }
 
+        public virtual Modulo Modulo { get; set; } = null!;
         public virtual Servicio Servicios { get; set; } = null!;
         public virtual ICollection<DescripcionPublicacion> DescripcionPublicacions { get; set; }
     }

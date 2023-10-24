@@ -6,6 +6,7 @@
         public string Archivo { get; set; } = null!;
         public int ServiciosId { get; set; }
         public string Titulo { get; set; } = null!;
+        public int id_modulo { get; set; }
         public bool Estado { get; set; }
         
     }
