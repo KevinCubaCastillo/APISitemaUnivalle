@@ -24,7 +24,8 @@ namespace APISitemaUnivalle.Controllers
                 var datos = _context.Modulos.Select(i => new
                 {
                     Identificador = i.Id,
-                    Nombre = i.Nombremodulo
+                    Nombre = i.Nombremodulo,
+                    i.Estado
                 });
                 if(datos.Count() == 0)
                 {
@@ -51,7 +52,8 @@ namespace APISitemaUnivalle.Controllers
                 var datos = _context.Modulos.Where(i => i.Estado == true).Select(i => new
                 {
                     Identificador = i.Id,
-                    Nombre = i.Nombremodulo
+                    Nombre = i.Nombremodulo,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {
@@ -78,7 +80,8 @@ namespace APISitemaUnivalle.Controllers
                 var datos = _context.Modulos.Where(i => i.Estado == false).Select(i => new
                 {
                     Identificador = i.Id,
-                    Nombre = i.Nombremodulo
+                    Nombre = i.Nombremodulo,
+                    i.Estado
                 });
                 if (datos.Count() == 0)
                 {
@@ -133,6 +136,7 @@ namespace APISitemaUnivalle.Controllers
                 }
                 Modulo modulo = new Modulo();
                 modulo.Nombremodulo = oModel.Nombremodulo;
+                modulo.CiUsuario = oModel.CiUsuario;
                 modulo.Estado = true;
                 _context.Modulos.Add(modulo);
                 _context.SaveChanges();
