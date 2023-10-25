@@ -54,6 +54,7 @@ namespace APISitemaUnivalle.Controllers
                     imagen = i.Imagen,
                     video = i.Video,
                     servicios_id = i.ServiciosId,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     estado = i.Estado
                 });
                 if (datos.Count() == 0)
@@ -84,6 +85,7 @@ namespace APISitemaUnivalle.Controllers
                     imagen = i.Imagen,
                     video = i.Video,
                     servicios_id = i.ServiciosId,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     estado = i.Estado
                 });
                 if (datos.Count() == 0)
@@ -114,6 +116,7 @@ namespace APISitemaUnivalle.Controllers
                     imagen = i.Imagen,
                     video = i.Video,
                     servicios_id = i.ServiciosId,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
                     estado = i.Estado
                 });
                 if (datos.Count() == 0)
@@ -130,6 +133,39 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpGet("getUbicacionesbyServicioId/{id}")]
+        public IActionResult getUbicacionesbyServicioId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Ubicaciones.Where(r => r.Estado == true && r.ServiciosId == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    i.Imagen,
+                    i.Video,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
 
         [HttpPost("addUbicaciones")]
         public IActionResult addUbicaciones(ubicacion_add_request UbicacionModel)
@@ -138,12 +174,11 @@ namespace APISitemaUnivalle.Controllers
             Ubicacione ubicacion = new Ubicacione();
             try
             {
-
-                
                 ubicacion.Descripcion = UbicacionModel.Descripcion;
                 ubicacion.Imagen = UbicacionModel.Imagen;
                 ubicacion.Video = UbicacionModel.Video;
                 ubicacion.ServiciosId = UbicacionModel.ServiciosId;
+                ubicacion.IdModulo = UbicacionModel.id_modulo;
                 ubicacion.Estado = UbicacionModel.Estado;
           
                 _context.Ubicaciones.Add(ubicacion);
@@ -180,6 +215,7 @@ namespace APISitemaUnivalle.Controllers
                 ubicacion.Imagen = UbicacionModel.Imagen;
                 ubicacion.Video = UbicacionModel.Video;
                 ubicacion.ServiciosId = UbicacionModel.ServiciosId;
+                ubicacion.IdModulo = UbicacionModel.id_modulo;
                 ubicacion.Estado = true;
 
                 _context.Ubicaciones.Update(ubicacion);

@@ -26,11 +26,14 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if(datos.Count() == 0)
@@ -60,11 +63,14 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -94,11 +100,14 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -128,11 +137,14 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -200,17 +212,21 @@ namespace APISitemaUnivalle.Controllers
                         Requisito requisito = new Requisito();
                         requisito.Descripcion = oModel.Descripcion;
                         requisito.ServiciosId = oModel.ServiciosId;
+                        requisito.IdModulo = oModel.id_modulo;
                         requisito.Estado = true;
                         _context.Requisitos.Add(requisito);
                         _context.SaveChanges();
-                        foreach(var paso in oModel.pasos)
+                        if(oModel.pasos != null)
                         {
-                            PasosRequisito pasosReq = new PasosRequisito();
-                            pasosReq.Nombre = paso.Nombre;
-                            pasosReq.RequisitosId = requisito.Id;
-                            pasosReq.Estado = true;
-                            _context.PasosRequisitos.Add(pasosReq);
-                            _context.SaveChanges();
+                            foreach (var paso in oModel.pasos)
+                            {
+                                PasosRequisito pasosReq = new PasosRequisito();
+                                pasosReq.Nombre = paso.Nombre;
+                                pasosReq.RequisitosId = requisito.Id;
+                                pasosReq.Estado = true;
+                                _context.PasosRequisitos.Add(pasosReq);
+                                _context.SaveChanges();
+                            }
                         }
                         transaction.Commit();
                         oresponse.success = 1;
@@ -356,6 +372,41 @@ namespace APISitemaUnivalle.Controllers
                         transaction.Rollback();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getRequisitosbyServicioId/{id}")]
+        public IActionResult getRequisitosbyServicioId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Requisitos.Where(r => r.Estado == true && r.ServiciosId == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
             }
             catch (Exception ex)
             {
