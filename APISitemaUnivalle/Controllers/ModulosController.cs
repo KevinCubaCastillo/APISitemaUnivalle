@@ -136,7 +136,7 @@ namespace APISitemaUnivalle.Controllers
                 }
                 Modulo modulo = new Modulo();
                 modulo.Nombremodulo = oModel.Nombremodulo;
-                modulo.CiUsuario = oModel.CiUsuario;
+                modulo.CiUsuario = "0000";
                 modulo.Estado = true;
                 _context.Modulos.Add(modulo);
                 _context.SaveChanges();
@@ -146,7 +146,7 @@ namespace APISitemaUnivalle.Controllers
             }
             catch(Exception ex)
             {
-                oResponse.message = ex.Message;
+                oResponse.message = ex.InnerException.Message;
                 return BadRequest(oResponse);
             }
             return Ok(oResponse);
