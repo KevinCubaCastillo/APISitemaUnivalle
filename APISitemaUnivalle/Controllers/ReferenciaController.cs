@@ -145,6 +145,38 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpGet("getReferenciasbyModuloId/{id}")]
+        public IActionResult getReferenciasbyModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Referencia.Where(r => r.Estado == true && r.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Nombre,
+                    numero = i.Numerocel,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
         [HttpPost("AddReferences")]
         public IActionResult addCliente(Referencias_add_Request oreferencias)
         {
@@ -200,7 +232,6 @@ namespace APISitemaUnivalle.Controllers
             {
                 oResponse.message = ex.Message;
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
 

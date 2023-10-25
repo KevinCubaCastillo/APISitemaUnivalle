@@ -137,6 +137,38 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpGet("getPublicacionesbyModuloId/{id}")]
+        public IActionResult getPublicacionesbyModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Publicacions.Where(r => r.Estado == true && r.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
         [HttpPost("AddPublicaciones")]
         public IActionResult addCliente(Publicacion_add_Request oPublicacion)
         {
@@ -166,7 +198,7 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
 
         }
-        [HttpPut("UpdatePublicaciones")]
+        [HttpPut("UpdatePublicaciones/{id}")]
         public IActionResult UpdatePublicaciones(Publicacion_edit_Request oPublicacion, int id)
         {
             Response oResponse = new Response();
