@@ -12,6 +12,6 @@ namespace APISitemaUnivalle.Models
         public int? IdModulo { get; set; }
 
         public virtual Modulo? IdModuloNavigation { get; set; }
-        public virtual Servicio Servicios { get; set; } = null!;
+        public virtual Servicio? Servicios { get; set; }
     }
 }

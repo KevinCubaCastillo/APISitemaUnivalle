@@ -197,6 +197,40 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpGet("getAllRequisitosByServiceId/{id}")]
+        public IActionResult getAllRequisitosByServiceId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.Servicios.Id == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
         [HttpGet("getRequisitosByModuloId/{id}")]
         public IActionResult getRequisitosByModuloId(int id)
         {
@@ -204,6 +238,41 @@ namespace APISitemaUnivalle.Controllers
             try
             {
                 var datos = _context.Requisitos.Where(i => i.Estado == true && i.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getAllRequisitosByModuloId/{id}")]
+        public IActionResult getAllRequisitosByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.IdModulo == id).Select(i => new
                 {
                     Identificador = i.Id,
                     descripcion = i.Descripcion,

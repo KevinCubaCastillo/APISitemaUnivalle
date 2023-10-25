@@ -167,6 +167,40 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
         }
 
+        [HttpGet("getAllUbicacionesbyServicioId/{id}")]
+        public IActionResult getAllUbicacionesbyServicioId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Ubicaciones.Where(r => r.ServiciosId == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    i.Imagen,
+                    i.Video,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
         [HttpGet("getUbicacionesbyModuloId/{id}")]
         public IActionResult getUbicacionesbyModuloId(int id)
         {
@@ -175,6 +209,40 @@ namespace APISitemaUnivalle.Controllers
             {
 
                 var datos = _context.Ubicaciones.Where(r => r.Estado == true && r.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    i.Imagen,
+                    i.Video,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getAllUbicacionesbyModuloId/{id}")]
+        public IActionResult getAllUbicacionesbyModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Ubicaciones.Where(r => r.IdModulo == id).Select(i => new
                 {
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
