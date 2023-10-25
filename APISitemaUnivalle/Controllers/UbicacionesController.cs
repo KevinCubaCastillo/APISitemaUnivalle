@@ -196,7 +196,7 @@ namespace APISitemaUnivalle.Controllers
         }
 
 
-        [HttpPut("updateUbicaciones")]
+        [HttpPut("updateUbicaciones/{id}")]
         public IActionResult updateUbicaciones(ubicacion_add_request UbicacionModel, int id)
         {
             Response oResponse = new Response();
@@ -230,10 +230,9 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
-
-
 
         [HttpPut("deleteUbicacion/{id}")]
         public IActionResult deleteUbicacion(int id)

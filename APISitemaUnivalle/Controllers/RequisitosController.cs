@@ -161,6 +161,42 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+            return Ok(oResponse);
+        }
+        [HttpGet("getRequisitosByServiceId/{id}")]
+        public IActionResult getRequisitosByServiceId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.Estado == true && i.Servicios.Id == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
         [HttpPost("addRequisito")]
@@ -208,6 +244,44 @@ namespace APISitemaUnivalle.Controllers
                 oresponse.message = ex.Message;
                 return BadRequest(oresponse);
             }
+            return Ok(oresponse);
+        }
+        [HttpPut("updateRequisito/{id}")]
+        public IActionResult updateRequisito(requisito_add_request oModel, int id)
+        {
+            Response oresponse = new Response();
+            try
+            {
+                        var requisito = _context.Requisitos.Find(id);
+                        if (requisito == null)
+                        {
+                            oresponse.message = "La referencia no existe";
+                            return Ok(oresponse);
+                        }
+                        requisito.Descripcion = oModel.Descripcion;
+                        requisito.ServiciosId = requisito.ServiciosId;
+                        requisito.Estado = true;
+                        _context.Requisitos.Update(requisito);
+                        _context.SaveChanges();
+                        foreach (var paso in oModel.pasos)
+                        {
+                            PasosRequisito pasosReq = new PasosRequisito();
+                            pasosReq.Nombre = paso.Nombre;
+                            pasosReq.RequisitosId = requisito.Id;
+                            pasosReq.Estado = requisito.Estado;
+                            _context.PasosRequisitos.Update(pasosReq);
+                            _context.SaveChanges();
+                        }
+                        oresponse.success = 1;
+                        oresponse.message = "Requisito actualizado con exito";
+                        oresponse.data = requisito;
+            }
+            catch (Exception ex)
+            {
+                oresponse.message = ex.Message;
+                return BadRequest(oresponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oresponse);
         }
         [HttpPut("deleteRequisito")]

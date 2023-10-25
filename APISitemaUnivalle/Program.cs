@@ -15,7 +15,6 @@ builder.Services.AddDbContext<dbUnivalleContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("dbUnivalle"));
 });
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: myCors, builder =>
@@ -39,5 +38,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors("AllowOrigin");
 app.Run();

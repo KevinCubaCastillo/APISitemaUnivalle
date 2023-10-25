@@ -3,6 +3,8 @@ using APISitemaUnivalle.Models.Request.Servicios;
 using APISitemaUnivalle.Models.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.AccessControl;
 
 namespace APISitemaUnivalle.Controllers
 {
@@ -112,7 +114,7 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Find(id);
+                var datos = _context.Servicios.Where(i => i.Estado == true).Include(e => e.Ubicaciones).Include(e => e.Referencia).Where(e=> e.Id == id);
                 if (datos == null)
                 {
                     oResponse.message = "No se encontraron datos";
@@ -127,6 +129,31 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+            return Ok(oResponse);
+        }
+        [HttpGet("getServicioByModule/{name}")]
+        public IActionResult getServicioByModule(string name)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Include(e => e.Ubicaciones).Include(e => e.Referencia).Where(e => e.Modulo.Nombremodulo.Equals(name));
+                if (datos == null)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
         [HttpGet("getServicioByModuloId/{id}")]
@@ -311,8 +338,10 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
+
         [HttpPut("deleteServicio/{id}")]
         public IActionResult deleteServicio(int id)
         {
