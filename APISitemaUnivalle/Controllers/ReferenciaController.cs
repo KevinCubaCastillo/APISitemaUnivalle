@@ -140,7 +140,7 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
 
         }
-        [HttpPut("UpdateReferences")]
+        [HttpPut("UpdateReferences/{id}")]
         public IActionResult UpdateReferences(Referencias_edit_Request oReferencia, int id)
         {
             Response oResponse = new Response();
@@ -167,6 +167,7 @@ namespace APISitemaUnivalle.Controllers
             {
                 oResponse.message = ex.Message;
             }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
 

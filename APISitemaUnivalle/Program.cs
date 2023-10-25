@@ -14,7 +14,17 @@ builder.Services.AddDbContext<dbUnivalleContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("dbUnivalle"));
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+        });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,5 +39,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors("AllowOrigin");
 app.Run();

@@ -1,63 +1,34 @@
 ﻿using APISitemaUnivalle.Models;
 using APISitemaUnivalle.Models.Request.Servicios;
+using APISitemaUnivalle.Models.Request.Tramites;
 using APISitemaUnivalle.Models.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.AccessControl;
 
 namespace APISitemaUnivalle.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServiciosController : ControllerBase
+    public class TramitesController : Controller
     {
         private readonly dbUnivalleContext _context;
-        public ServiciosController(dbUnivalleContext context)
+        public TramitesController(dbUnivalleContext context)
         {
             _context = context;
         }
-        [HttpGet("getAllServicios")]
-        public IActionResult getAllServicios()
+
+        [HttpGet("getAllTramites")]
+        public IActionResult getAllTramites()
         {
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Select(i => new
+                var datos = _context.Tramites.Select(i => new
                 {
                     identificador = i.Id,
-                    nombre = i.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
-                    imagen = i.ImagenUrl
-                });
-                if(datos.Count() == 0)
-                {
-                    oResponse.message = "No se encontraron datos";
-                    return BadRequest(oResponse);
-                }
-                oResponse.data = datos;
-                oResponse.message = "Solicitud realizada con exito";
-                oResponse.success = 1;
-            }
-            catch (Exception ex)
-            {
-                oResponse.message = ex.Message;
-                return BadRequest(oResponse);
-            }
-            return Ok(oResponse);
-        }
-        [HttpGet("getActiveServicios")]
-        public IActionResult getActiveServicios()
-        {
-            Response oResponse = new Response();
-            try
-            {
-                var datos = _context.Servicios.Where(i => i.Estado == true).Select(i => new
-                {
-                    identificador = i.Id,
-                    nombre = i.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
-                    imagen = i.ImagenUrl
+                    tiempoTramite = i.Tiempotramite,
+                    servicio = i.Servicios.Nombre
                 });
                 if (datos.Count() == 0)
                 {
@@ -75,18 +46,19 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpGet("getDeletedServicios")]
-        public IActionResult getDeletedServicios()
+
+
+        [HttpGet("getActiveTramites")]
+        public IActionResult getActiveTramites()
         {
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Where(i => i.Estado == false).Select(i => new
+                var datos = _context.Tramites.Where(i => i.Estado == true).Select(i => new
                 {
                     identificador = i.Id,
-                    nombre = i.Nombre,
-                    modulo = i.Modulo.Nombremodulo,
-                    imagen = i.ImagenUrl
+                    tiempoTramite = i.Tiempotramite,
+                    servicio = i.Servicios.Nombre
                 });
                 if (datos.Count() == 0)
                 {
@@ -104,13 +76,42 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpGet("getServicioById/{id}")]
-        public IActionResult getServicioById(int id)
+        [HttpGet("getDeletedTramites")]
+        public IActionResult getDeletedTramites()
         {
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Where(i => i.Estado == true).Include(e => e.Ubicaciones).Include(e => e.Referencia).Where(e=> e.Id == id);
+                var datos = _context.Tramites.Where(i => i.Estado == false).Select(i => new
+                {
+                    identificador = i.Id,
+                    tiempoTramite = i.Tiempotramite,
+                    servicio = i.Servicios.Nombre
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return BadRequest(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getTramiteById/{id}")]
+        public IActionResult getModuleById(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Tramites.Find(id);
                 if (datos == null)
                 {
                     oResponse.message = "No se encontraron datos";
@@ -125,83 +126,59 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
-        [HttpGet("getServicioByModule/{name}")]
-        public IActionResult getServicioByModule(string name)
+
+        [HttpPost("addTramite")]
+        public IActionResult addTramite(tramite_add_request oModel)
         {
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Include(e => e.Ubicaciones).Include(e => e.Referencia).Where(e => e.Modulo.Nombremodulo.Equals(name));
-                if (datos == null)
+                var verify = _context.Tramites.FirstOrDefault(i => (i.Tiempotramite).ToUpper() == (oModel.Tiempotramite).ToUpper() && i.Servicios.Id == oModel.ServiciosId);
+                if (verify != null)
                 {
-                    oResponse.message = "No se encontraron datos";
-                    return NotFound(oResponse);
+                    oResponse.message = "El tramite ya existe";
+                    return BadRequest(oResponse);
                 }
-                oResponse.data = datos;
-                oResponse.message = "Solicitud realizada con exito";
+                Tramite tramite = new Tramite();
+                tramite.Tiempotramite = oModel.Tiempotramite;
+                tramite.ServiciosId = oModel.ServiciosId;
+                tramite.Estado = true;
+                _context.Tramites.Add(tramite);
+                _context.SaveChanges();
                 oResponse.success = 1;
+                oResponse.message = "Tramite registrado con exito";
+                oResponse.data = tramite;
             }
             catch (Exception ex)
             {
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
-        [HttpPost ("addServicio")]
-        public IActionResult addServicio(servicio_add_request oModel)
+
+        [HttpPut("updateTramite/{id}")]
+        public IActionResult updateTramite(tramite_update_request oModel, int id)
         {
             Response oResponse = new Response();
             try
             {
-                var verify = _context.Servicios.FirstOrDefault(i => (i.Nombre).ToUpper() == (oModel.Nombre).ToUpper() && i.ModuloId == oModel.ModuloId);
-                if(verify != null)
+                var tramite = _context.Tramites.Find(id);
+                if (tramite == null)
                 {
-                    oResponse.message = "El servicio ya existe";
+                    oResponse.message = "El tramite no existe";
                     return BadRequest(oResponse);
                 }
-                Servicio servicio = new Servicio();
-                servicio.Nombre = oModel.Nombre;
-                servicio.ModuloId = oModel.ModuloId;
-                servicio.ImagenUrl = oModel.ImagenUrl;
-                servicio.Estado = true;
-                _context.Servicios.Add(servicio);
+                tramite.Tiempotramite = oModel.Tiempotramite;
+                tramite.Estado = true;
+
+                _context.Tramites.Update(tramite);
                 _context.SaveChanges();
                 oResponse.success = 1;
-                oResponse.message = "Servicio registrado con exito";
-                oResponse.data = servicio;
-            }
-            catch(Exception ex)
-            {
-                oResponse.message = ex.Message;
-                return BadRequest(oResponse);
-            }
-            return Ok(oResponse);
-        }
-        [HttpPut("updateServicio/{id}")]
-        public IActionResult updateServicio(servicio_update_request oModel, int id)
-        {
-            Response oResponse = new Response();
-            try
-            {
-                var servicio = _context.Servicios.Find(id);
-                if (servicio == null)
-                {
-                    oResponse.message = "El servicio no existe";
-                    return BadRequest(oResponse);
-                }
-                servicio.Nombre = oModel.Nombre;
-                servicio.ImagenUrl = oModel.ImagenUrl;
-                servicio.Estado = true;
-                _context.Servicios.Update(servicio);
-                _context.SaveChanges();
-                oResponse.success = 1;
-                oResponse.message = "Servicio actualizado con exito";
-                oResponse.data = servicio;
+                oResponse.message = "Tramite actualizado con exito";
+                oResponse.data = tramite;
             }
             catch (Exception ex)
             {
@@ -218,23 +195,23 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var servicio = _context.Servicios.Find(id);
-                if (servicio == null)
+                var tramite = _context.Tramites.Find(id);
+                if (tramite == null)
                 {
-                    oResponse.message = "El servicio no existe";
+                    oResponse.message = "El tramite no existe";
                     return BadRequest(oResponse);
                 }
-                if(servicio.Estado == false)
+                if (tramite.Estado == false)
                 {
-                    oResponse.message = "El servicio no existe";
+                    oResponse.message = "El tramite no existe";
                     return BadRequest(oResponse);
                 }
-                servicio.Estado = false;
-                _context.Servicios.Update(servicio);
+                tramite.Estado = false;
+                _context.Tramites.Update(tramite);
                 _context.SaveChanges();
                 oResponse.success = 1;
-                oResponse.message = "Servicio eliminado con exito";
-                oResponse.data = servicio;
+                oResponse.message = "Tramite eliminado con exito";
+                oResponse.data = tramite;
             }
             catch (Exception ex)
             {
@@ -243,29 +220,31 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpPut("restoreServicio/{id}")]
+
+
+        [HttpPut("restoreTramite/{id}")]
         public IActionResult restoreServicio(int id)
         {
             Response oResponse = new Response();
             try
             {
-                var servicio = _context.Servicios.Find(id);
-                if (servicio == null)
+                var tramite = _context.Tramites.Find(id);
+                if (tramite == null)
                 {
-                    oResponse.message = "El servicio no existe";
+                    oResponse.message = "El tramite no existe";
                     return BadRequest(oResponse);
                 }
-                if (servicio.Estado == true)
+                if (tramite.Estado == true)
                 {
-                    oResponse.message = "El servicio no esta eliminado";
+                    oResponse.message = "El tramite no esta eliminado";
                     return BadRequest(oResponse);
                 }
-                servicio.Estado = true;
-                _context.Servicios.Update(servicio);
+                tramite.Estado = true;
+                _context.Tramites.Update(tramite);
                 _context.SaveChanges();
                 oResponse.success = 1;
-                oResponse.message = "Servicio restaurado con exito";
-                oResponse.data = servicio;
+                oResponse.message = "Tramite restaurado con exito";
+                oResponse.data = tramite;
             }
             catch (Exception ex)
             {
