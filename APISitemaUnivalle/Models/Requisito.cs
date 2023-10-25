@@ -12,7 +12,7 @@ namespace APISitemaUnivalle.Models
 
         public int Id { get; set; }
         public string Descripcion { get; set; } = null!;
-        public int ServiciosId { get; set; }
+        public int? ServiciosId { get; set; }
         public bool Estado { get; set; }
         public int? IdModulo { get; set; }
 

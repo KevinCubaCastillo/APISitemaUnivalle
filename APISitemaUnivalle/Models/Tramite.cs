@@ -8,7 +8,7 @@ namespace APISitemaUnivalle.Models
         public int Id { get; set; }
         public string Tiempotramite { get; set; } = null!;
         public bool Estado { get; set; }
-        public int ServiciosId { get; set; }
+        public int? ServiciosId { get; set; }
         public int? IdModulo { get; set; }
 
         public virtual Modulo? IdModuloNavigation { get; set; }

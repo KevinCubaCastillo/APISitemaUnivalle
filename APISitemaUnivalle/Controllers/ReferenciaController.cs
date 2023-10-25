@@ -200,7 +200,7 @@ namespace APISitemaUnivalle.Controllers
 
             catch (Exception ex)
             {
-                oResponse.message = ex.Message;
+                oResponse.message = ex.InnerException.Message;
             }
             return Ok(oResponse);
 

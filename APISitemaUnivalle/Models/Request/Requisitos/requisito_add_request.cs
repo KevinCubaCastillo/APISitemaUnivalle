@@ -3,8 +3,8 @@
     public class requisito_add_request
     {
         public string Descripcion { get; set; } = null!;
-        public int ServiciosId { get; set; }
-        public int id_modulo { get; set; }
+        public int? ServiciosId { get; set; }
+        public int? id_modulo { get; set; }
         public List<pasosRequisitos> pasos { get; set; }
         public requisito_add_request()
         {
