@@ -170,7 +170,7 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
         }
         [HttpPost("AddPublicaciones")]
-        public IActionResult addCliente(Publicacion_add_Request oPublicacion)
+        public IActionResult addPublicacion(Publicacion_add_Request oPublicacion)
         {
             Response oResponse = new Response();
             try
@@ -194,6 +194,58 @@ namespace APISitemaUnivalle.Controllers
             catch (Exception ex)
             {
                 oResponse.message = ex.Message;
+            }
+            return Ok(oResponse);
+
+        }
+        [HttpPost("addPublicacionWithDescription")]
+        public IActionResult addPublicacionWithDescription(Publicacion_add_Request oPublicacion)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                using(var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        Publicacion npublicacion = new Publicacion();
+                        //npublicacion.Id = oPublicacion.Id;
+                        npublicacion.Archivo = oPublicacion.Archivo;
+                        npublicacion.ServiciosId = oPublicacion.ServiciosId;
+                        npublicacion.IdModulo = oPublicacion.id_modulo;
+                        npublicacion.Titulo = oPublicacion.Titulo;
+                        npublicacion.Estado = oPublicacion.Estado;
+                        _context.Publicacions.Add(npublicacion);
+                        _context.SaveChanges();
+                        if(oPublicacion.descripcionPublicacion != null)
+                        {
+                            foreach (var des in oPublicacion.descripcionPublicacion)
+                            {
+                                DescripcionPublicacion nDes = new DescripcionPublicacion();
+                                nDes.IdPublicacion = npublicacion.Id;
+                                nDes.Contenido = des.Contenido;
+                                nDes.Estado = true;
+                                _context.DescripcionPublicacions.Add(nDes);
+                                _context.SaveChanges();
+                            }
+                        }
+                        oResponse.message = "Agregado con exito";
+                        oResponse.success = 1;
+                        oResponse.data = npublicacion;
+                        transaction.Commit();
+                    }
+                    catch(Exception ex)
+                    {
+                        transaction.Rollback();
+                        oResponse.message = ex.InnerException.Message;
+                    }
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                oResponse.message = ex.InnerException.Message;
             }
             return Ok(oResponse);
 

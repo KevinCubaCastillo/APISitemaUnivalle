@@ -8,6 +8,16 @@
         public string Titulo { get; set; } = null!;
         public int id_modulo { get; set; }
         public bool Estado { get; set; }
+        public List<descripcionPub> descripcionPublicacion { get; set; }
+        public Publicacion_add_Request()
+        {
+            descripcionPublicacion = new List<descripcionPub>();
+        }
         
+    }
+    public class descripcionPub
+    {
+        public string Contenido { get; set; } = null!;
+
     }
 }
