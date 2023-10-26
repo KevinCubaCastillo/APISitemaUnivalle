@@ -131,6 +131,32 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+
+        [HttpGet("getTramiteById/{id}")]
+        public IActionResult getTramiteById(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Where(i => i.Estado == true).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Include(e => e.Requisitos).Where(e => e.Id == id);
+                if (datos == null)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+            return Ok(oResponse);
+        }
+
         [HttpGet("getServicioByModule/{name}")]
         public IActionResult getServicioByModule(string name)
         {
@@ -152,6 +178,57 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
+            return Ok(oResponse);
+        }
+
+
+        [HttpGet("getTramiteByModuleActive/{name}")]
+        public IActionResult getTramiteByModuleActive(string name)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Where(i => i.Estado == true).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Where(e => e.Modulo.Nombremodulo.Equals(name));
+                if (datos == null)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getTramiteByModuleInactive/{name}")]
+        public IActionResult getTramiteByModuleInactive(string name)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Where(i => i.Estado == false).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Where(e => e.Modulo.Nombremodulo.Equals(name));
+                if (datos == null)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
         [HttpGet("getServicioByModuloId/{id}")]
