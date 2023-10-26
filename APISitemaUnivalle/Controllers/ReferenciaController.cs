@@ -363,7 +363,7 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
         }
 
-        [HttpPut("DeleteReferences")]
+        [HttpPut("DeleteReferences/{id}")]
         public IActionResult DeleteReferences(int id)
         {
             Response oResponse = new Response();
@@ -395,7 +395,7 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
         }
 
-        [HttpPut("RestoreReferences")]
+        [HttpPut("RestoreReferences/{id}")]
         public IActionResult RestoreReferences(int id)
         {
             Response oResponse = new Response();

@@ -17,11 +17,22 @@ builder.Services.AddDbContext<dbUnivalleContext>(options =>
 });
 builder.Services.AddCors(options =>
 {
+<<<<<<< HEAD
+    options.AddPolicy("AllowOrigin",
+        builder =>
+        {
+            builder.WithOrigins("*")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+        });
+=======
     options.AddPolicy(name: myCors, builder =>
     {
         builder.AllowAnyOrigin()
         .AllowAnyMethod().AllowAnyHeader();
     });
+>>>>>>> 2361eb17fcce933ec93c542226f266031886e151
 });
 var app = builder.Build();
 
