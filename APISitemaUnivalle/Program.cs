@@ -2,6 +2,7 @@ using APISitemaUnivalle.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
+var myCors = "cors";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<dbUnivalleContext>(options =>
 });
 builder.Services.AddCors(options =>
 {
+<<<<<<< HEAD
     options.AddPolicy("AllowOrigin",
         builder =>
         {
@@ -24,15 +26,23 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod()
                    .AllowCredentials();
         });
+=======
+    options.AddPolicy(name: myCors, builder =>
+    {
+        builder.AllowAnyOrigin()
+        .AllowAnyMethod().AllowAnyHeader();
+    });
+>>>>>>> 2361eb17fcce933ec93c542226f266031886e151
 });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+
+app.UseSwaggerUI();
+
+app.UseCors(myCors);
 
 app.UseHttpsRedirection();
 

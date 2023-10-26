@@ -1,59 +1,34 @@
 ﻿using APISitemaUnivalle.Models;
-using APISitemaUnivalle.Models.Request.Modulos;
+using APISitemaUnivalle.Models.Request.Servicios;
+using APISitemaUnivalle.Models.Request.Tramites;
 using APISitemaUnivalle.Models.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APISitemaUnivalle.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModulosController : ControllerBase
+    public class TramitesController : Controller
     {
         private readonly dbUnivalleContext _context;
-        public ModulosController (dbUnivalleContext context)
+        public TramitesController(dbUnivalleContext context)
         {
             _context = context;
         }
-        [HttpGet("getAllModulos")]
-        public IActionResult getAllModulos()
+
+        [HttpGet("getAllTramites")]
+        public IActionResult getAllTramites()
         {
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Modulos.Select(i => new
+                var datos = _context.Tramites.Select(i => new
                 {
-                    Identificador = i.Id,
-                    Nombre = i.Nombremodulo,
-                    i.Estado
-                });
-                if(datos.Count() == 0)
-                {
-                    oResponse.message = "No se encontraron datos";
-                    return BadRequest(oResponse);
-                }
-                oResponse.data = datos;
-                oResponse.message = "Solicitud realizada con exito";
-                oResponse.success = 1;
-            }
-            catch (Exception ex)
-            {
-                oResponse.message = ex.Message;
-                return BadRequest(oResponse);
-            }
-            return Ok(oResponse);
-        }
-        [HttpGet("getActiveModulos")]
-        public IActionResult getActiveModulos()
-        {
-            Response oResponse = new Response();
-            try
-            {
-                var datos = _context.Modulos.Where(i => i.Estado == true).Select(i => new
-                {
-                    Identificador = i.Id,
-                    Nombre = i.Nombremodulo,
-                    i.Estado
+                    identificador = i.Id,
+                    tiempoTramite = i.Tiempotramite,
+                    servicio = i.Servicios.Nombre
                 });
                 if (datos.Count() == 0)
                 {
@@ -71,17 +46,19 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpGet("getDeletedModulos")]
-        public IActionResult getDeletedModulos()
+
+
+        [HttpGet("getActiveTramites")]
+        public IActionResult getActiveTramites()
         {
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Modulos.Where(i => i.Estado == false).Select(i => new
+                var datos = _context.Tramites.Where(i => i.Estado == true).Select(i => new
                 {
-                    Identificador = i.Id,
-                    Nombre = i.Nombremodulo,
-                    i.Estado
+                    identificador = i.Id,
+                    tiempoTramite = i.Tiempotramite,
+                    servicio = i.Servicios.Nombre
                 });
                 if (datos.Count() == 0)
                 {
@@ -99,13 +76,42 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpGet("getModuloById/{id}")]
+        [HttpGet("getDeletedTramites")]
+        public IActionResult getDeletedTramites()
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Tramites.Where(i => i.Estado == false).Select(i => new
+                {
+                    identificador = i.Id,
+                    tiempoTramite = i.Tiempotramite,
+                    servicio = i.Servicios.Nombre
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return BadRequest(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getTramiteById/{id}")]
         public IActionResult getModuleById(int id)
         {
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Modulos.Find(id);
+                var datos = _context.Tramites.Find(id);
                 if (datos == null)
                 {
                     oResponse.message = "No se encontraron datos";
@@ -122,84 +128,28 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpPost("addModulo")]
-        public IActionResult addModulo(modulos_add_request oModel)
+
+        [HttpPost("addTramite")]
+        public IActionResult addTramite(tramite_add_request oModel)
         {
             Response oResponse = new Response();
             try
             {
-                var ver = _context.Modulos.FirstOrDefault(i => (i.Nombremodulo).ToUpper() == (oModel.Nombremodulo).ToUpper());
-                if (ver != null)
+                var verify = _context.Tramites.FirstOrDefault(i => (i.Tiempotramite).ToUpper() == (oModel.Tiempotramite).ToUpper() && i.Servicios.Id == oModel.ServiciosId);
+                if (verify != null)
                 {
-                    oResponse.message = "El modulo ya existe";
+                    oResponse.message = "El tramite ya existe";
                     return BadRequest(oResponse);
                 }
-                Modulo modulo = new Modulo();
-                modulo.Nombremodulo = oModel.Nombremodulo;
-                modulo.CiUsuario = oModel.CiUsuario;
-                modulo.Estado = true;
-                _context.Modulos.Add(modulo);
+                Tramite tramite = new Tramite();
+                tramite.Tiempotramite = oModel.Tiempotramite;
+                tramite.ServiciosId = oModel.ServiciosId;
+                tramite.Estado = true;
+                _context.Tramites.Add(tramite);
                 _context.SaveChanges();
                 oResponse.success = 1;
-                oResponse.message = "Modulo Registrado con exito";
-                oResponse.data = modulo;
-            }
-            catch(Exception ex)
-            {
-                oResponse.message = ex.Message;
-                return BadRequest(oResponse);
-            }
-            return Ok(oResponse);
-        }
-        [HttpPut("updateModulo/{id}")]
-        public IActionResult updateModulo(modulos_update_request oModel, int id)
-        {
-            Response oResponse = new Response();
-            try
-            {
-                var modulo = _context.Modulos.Find(id);
-                if (modulo == null)
-                {
-                    oResponse.message = "No se encontraron datos";
-                    return NotFound(oResponse);
-                }
-                modulo.Nombremodulo = oModel.Nombremodulo;
-                _context.Modulos.Update(modulo);
-                _context.SaveChanges();
-                oResponse.success = 1;
-                oResponse.message = "Modulo actualizado con exito";
-                oResponse.data = modulo;
-            }
-            catch(Exception ex)
-            {
-                oResponse.message = ex.Message;
-                return BadRequest(oResponse);
-            }
-            return Ok(oResponse);
-        }
-        [HttpPut("deleteModulo/{id}")]
-        public IActionResult deleteModulo(int id)
-        {
-            Response oResponse = new Response();
-            try
-            {
-                var modulo = _context.Modulos.Find(id);
-                if (modulo == null)
-                {
-                    oResponse.message = "No se encontraron datos";
-                    return NotFound(oResponse);
-                }
-                if (modulo.Estado == false)
-                {
-                    oResponse.message = "No se encontraron datos";
-                    return NotFound(oResponse);
-                }
-                modulo.Estado = false;
-                _context.Modulos.Update(modulo);
-                _context.SaveChanges();
-                oResponse.success = 1;
-                oResponse.message = "Modulo eliminado con exito";
-                oResponse.data = modulo;
+                oResponse.message = "Tramite registrado con exito";
+                oResponse.data = tramite;
             }
             catch (Exception ex)
             {
@@ -208,29 +158,93 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpPut("restoreModulo/{id}")]
-        public IActionResult restoreModulo(int id)
+
+        [HttpPut("updateTramite/{id}")]
+        public IActionResult updateTramite(tramite_update_request oModel, int id)
         {
             Response oResponse = new Response();
             try
             {
-                var modulo = _context.Modulos.Find(id);
-                if (modulo == null)
+                var tramite = _context.Tramites.Find(id);
+                if (tramite == null)
                 {
-                    oResponse.message = "No se encontraron datos";
-                    return NotFound(oResponse);
+                    oResponse.message = "El tramite no existe";
+                    return BadRequest(oResponse);
                 }
-                if (modulo.Estado == true)
-                {
-                    oResponse.message = "No se encontraron datos";
-                    return NotFound(oResponse);
-                }
-                modulo.Estado = true;
-                _context.Modulos.Update(modulo);
+                tramite.Tiempotramite = oModel.Tiempotramite;
+                tramite.Estado = true;
+
+                _context.Tramites.Update(tramite);
                 _context.SaveChanges();
                 oResponse.success = 1;
-                oResponse.message = "Modulo restaurado con exito";
-                oResponse.data = modulo;
+                oResponse.message = "Tramite actualizado con exito";
+                oResponse.data = tramite;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+            return Ok(oResponse);
+        }
+
+        [HttpPut("deleteServicio/{id}")]
+        public IActionResult deleteServicio(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var tramite = _context.Tramites.Find(id);
+                if (tramite == null)
+                {
+                    oResponse.message = "El tramite no existe";
+                    return BadRequest(oResponse);
+                }
+                if (tramite.Estado == false)
+                {
+                    oResponse.message = "El tramite no existe";
+                    return BadRequest(oResponse);
+                }
+                tramite.Estado = false;
+                _context.Tramites.Update(tramite);
+                _context.SaveChanges();
+                oResponse.success = 1;
+                oResponse.message = "Tramite eliminado con exito";
+                oResponse.data = tramite;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+
+        [HttpPut("restoreTramite/{id}")]
+        public IActionResult restoreServicio(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var tramite = _context.Tramites.Find(id);
+                if (tramite == null)
+                {
+                    oResponse.message = "El tramite no existe";
+                    return BadRequest(oResponse);
+                }
+                if (tramite.Estado == true)
+                {
+                    oResponse.message = "El tramite no esta eliminado";
+                    return BadRequest(oResponse);
+                }
+                tramite.Estado = true;
+                _context.Tramites.Update(tramite);
+                _context.SaveChanges();
+                oResponse.success = 1;
+                oResponse.message = "Tramite restaurado con exito";
+                oResponse.data = tramite;
             }
             catch (Exception ex)
             {

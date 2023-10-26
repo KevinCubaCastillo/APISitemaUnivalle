@@ -8,7 +8,6 @@ namespace APISitemaUnivalle.Models
         public Servicio()
         {
             Carreras = new HashSet<Carrera>();
-            Personals = new HashSet<Personal>();
             Publicacions = new HashSet<Publicacion>();
             Referencia = new HashSet<Referencium>();
             Requisitos = new HashSet<Requisito>();
@@ -21,10 +20,11 @@ namespace APISitemaUnivalle.Models
         public int ModuloId { get; set; }
         public bool Estado { get; set; }
         public string? ImagenUrl { get; set; }
+        public int? IdCategoria { get; set; }
 
+        public virtual Categorium? IdCategoriaNavigation { get; set; }
         public virtual Modulo Modulo { get; set; } = null!;
         public virtual ICollection<Carrera> Carreras { get; set; }
-        public virtual ICollection<Personal> Personals { get; set; }
         public virtual ICollection<Publicacion> Publicacions { get; set; }
         public virtual ICollection<Referencium> Referencia { get; set; }
         public virtual ICollection<Requisito> Requisitos { get; set; }

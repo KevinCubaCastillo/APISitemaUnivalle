@@ -5,14 +5,20 @@ namespace APISitemaUnivalle.Models
 {
     public partial class Publicacion
     {
+        public Publicacion()
+        {
+            DescripcionPublicacions = new HashSet<DescripcionPublicacion>();
+        }
+
         public int Id { get; set; }
         public string Archivo { get; set; } = null!;
-        public string? Descripcion1 { get; set; }
         public int ServiciosId { get; set; }
         public string Titulo { get; set; } = null!;
-        public string? Descripcion2 { get; set; }
         public bool Estado { get; set; }
+        public int? IdModulo { get; set; }
 
+        public virtual Modulo? IdModuloNavigation { get; set; }
         public virtual Servicio Servicios { get; set; } = null!;
+        public virtual ICollection<DescripcionPublicacion> DescripcionPublicacions { get; set; }
     }
 }
