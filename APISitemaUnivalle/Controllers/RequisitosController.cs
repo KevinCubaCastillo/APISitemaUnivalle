@@ -422,41 +422,56 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oresponse);
         }
         [HttpPut("updateRequisito/{id}")]
-        public IActionResult updateRequisito(requisito_add_request oModel, int id)
+        public IActionResult updateRequisito(requisito_update_request oModel, int id)
         {
             Response oresponse = new Response();
             try
             {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
                         var requisito = _context.Requisitos.Find(id);
-                        if (requisito == null)
+                        if(requisito == null)
                         {
-                            oresponse.message = "La referencia no existe";
-                            return Ok(oresponse);
+                            oresponse.message = "El requisito no existe";
+                            throw new Exception();
                         }
                         requisito.Descripcion = oModel.Descripcion;
-                        requisito.ServiciosId = requisito.ServiciosId;
-                        requisito.Estado = true;
                         _context.Requisitos.Update(requisito);
                         _context.SaveChanges();
-                        foreach (var paso in oModel.pasos)
+                        if (oModel.pasos != null)
                         {
-                            PasosRequisito pasosReq = new PasosRequisito();
-                            pasosReq.Nombre = paso.Nombre;
-                            pasosReq.RequisitosId = requisito.Id;
-                            pasosReq.Estado = requisito.Estado;
-                            _context.PasosRequisitos.Update(pasosReq);
-                            _context.SaveChanges();
+                            foreach (var paso in oModel.pasos)
+                            {
+                                var pasosReq = _context.PasosRequisitos.Find(paso.id);
+                                if (pasosReq != null)
+                                {
+                                    pasosReq.Nombre = paso.Nombre;
+                                    _context.PasosRequisitos.Update(pasosReq);
+                                    _context.SaveChanges();
+                                }
+
+                            }
                         }
+                        transaction.Commit();
                         oresponse.success = 1;
                         oresponse.message = "Requisito actualizado con exito";
                         oresponse.data = requisito;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        oresponse.message = ex.InnerException.Message;
+                        return BadRequest(oresponse);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 oresponse.message = ex.Message;
                 return BadRequest(oresponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oresponse);
         }
         [HttpPut("deleteRequisito")]
