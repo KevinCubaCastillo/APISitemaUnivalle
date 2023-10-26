@@ -384,8 +384,6 @@ namespace APISitemaUnivalle.Controllers
                 ubicacion.Descripcion = UbicacionModel.Descripcion;
                 ubicacion.Imagen = UbicacionModel.Imagen;
                 ubicacion.Video = UbicacionModel.Video;
-                ubicacion.ServiciosId = UbicacionModel.ServiciosId;
-                ubicacion.IdModulo = UbicacionModel.id_modulo;
                 ubicacion.Estado = true;
 
                 _context.Ubicaciones.Update(ubicacion);
@@ -400,7 +398,6 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
 

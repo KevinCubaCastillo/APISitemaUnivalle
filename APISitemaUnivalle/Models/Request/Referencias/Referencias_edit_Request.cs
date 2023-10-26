@@ -4,6 +4,5 @@
     {
         public string Nombre { get; set; } = null!;
         public string Numerocel { get; set; } = null!;
-        public int ServiciosId { get; set; }
     }
 }

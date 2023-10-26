@@ -21,7 +21,20 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Publicacions;
+                var datos = _context.Publicacions.Select( i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
                 if (datos.Count() == 0)
                 {
                     oResponse.message = "No se encontraron datos validos";
@@ -43,7 +56,20 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Publicacions.Where(p => p.Estado);
+                var datos = _context.Publicacions.Where(p => p.Estado).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
                 if (datos.Count() == 0)
                 {
                     oResponse.message = "No se encontraron publicaciones activas";
@@ -65,7 +91,20 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Publicacions.Where(p => !p.Estado);
+                var datos = _context.Publicacions.Where(p => !p.Estado).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
                 if (datos.Count() == 0)
                 {
                     oResponse.message = "No se encontraron publicaciones inactivas";
@@ -119,7 +158,12 @@ namespace APISitemaUnivalle.Controllers
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
-                    i.Estado
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
                 });
                 if (datos.Count() == 0)
                 {
@@ -151,7 +195,12 @@ namespace APISitemaUnivalle.Controllers
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
-                    i.Estado
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
                 });
                 if (datos.Count() == 0)
                 {
@@ -183,7 +232,12 @@ namespace APISitemaUnivalle.Controllers
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
-                    i.Estado
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
                 });
                 if (datos.Count() == 0)
                 {
@@ -215,7 +269,12 @@ namespace APISitemaUnivalle.Controllers
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
-                    i.Estado
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
                 });
                 if (datos.Count() == 0)
                 {
@@ -247,7 +306,12 @@ namespace APISitemaUnivalle.Controllers
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
-                    i.Estado
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
                 });
                 if (datos.Count() == 0)
                 {
@@ -279,7 +343,12 @@ namespace APISitemaUnivalle.Controllers
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
-                    i.Estado
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
                 });
                 if (datos.Count() == 0)
                 {
@@ -391,7 +460,6 @@ namespace APISitemaUnivalle.Controllers
                     return Ok(oResponse);
                 }
                 publicacion.Archivo = oPublicacion.Archivo;
-                publicacion.ServiciosId = oPublicacion.ServiciosId;
                 publicacion.Titulo = oPublicacion.Titulo;
                 _context.Publicacions.Update(publicacion);
                 _context.SaveChanges();

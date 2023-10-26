@@ -349,8 +349,6 @@ namespace APISitemaUnivalle.Controllers
                 }
                 referencia.Nombre = oReferencia.Nombre;
                 referencia.Numerocel = oReferencia.Numerocel;
-                referencia.ServiciosId = oReferencia.ServiciosId;
-
                 _context.Referencia.Update(referencia);
                 _context.SaveChanges();
                 oResponse.message = "editado con exito";
@@ -360,7 +358,7 @@ namespace APISitemaUnivalle.Controllers
             }
             catch (Exception ex)
             {
-                oResponse.message = ex.Message;
+                oResponse.message = ex.InnerException.Message;
             }
             return Ok(oResponse);
         }

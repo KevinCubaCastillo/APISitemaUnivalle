@@ -406,9 +406,11 @@ namespace APISitemaUnivalle.Controllers
                         oresponse.message = "Requisito registrado con exito";
                         oresponse.data = requisito;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
+                        oresponse.message = ex.InnerException.Message;
+                        return BadRequest(oresponse);
                     }
                 }
             }
