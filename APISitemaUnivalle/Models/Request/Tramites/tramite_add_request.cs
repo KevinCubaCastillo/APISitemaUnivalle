@@ -3,7 +3,7 @@
     public class tramite_add_request
     {
         public string Tiempotramite { get; set; } = null!;  
-        public int ServiciosId { get; set; }
+        public int? ServiciosId { get; set; }
 
     }
 }

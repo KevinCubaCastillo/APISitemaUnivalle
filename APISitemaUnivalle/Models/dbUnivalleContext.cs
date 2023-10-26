@@ -123,7 +123,6 @@ namespace APISitemaUnivalle.Models
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Carreras)
                     .HasForeignKey(d => d.ServiciosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("carrera_servicios_fk");
             });
 
@@ -261,7 +260,6 @@ namespace APISitemaUnivalle.Models
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Publicacions)
                     .HasForeignKey(d => d.ServiciosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("publicacion_servicios_fk");
             });
 
@@ -295,7 +293,6 @@ namespace APISitemaUnivalle.Models
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Referencia)
                     .HasForeignKey(d => d.ServiciosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("referencia_servicios_fk");
             });
 
@@ -325,7 +322,6 @@ namespace APISitemaUnivalle.Models
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Requisitos)
                     .HasForeignKey(d => d.ServiciosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("requisitos_servicios_fk");
             });
 
@@ -389,7 +385,6 @@ namespace APISitemaUnivalle.Models
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Tramites)
                     .HasForeignKey(d => d.ServiciosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("tramites_servicios_fk");
             });
 
@@ -427,7 +422,6 @@ namespace APISitemaUnivalle.Models
                 entity.HasOne(d => d.Servicios)
                     .WithMany(p => p.Ubicaciones)
                     .HasForeignKey(d => d.ServiciosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ubicaciones_servicios_fk");
             });
 

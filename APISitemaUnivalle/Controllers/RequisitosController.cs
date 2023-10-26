@@ -161,7 +161,6 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
         [HttpGet("getRequisitosByServiceId/{id}")]
@@ -196,7 +195,181 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getDisabledRequisitosByServiceId/{id}")]
+        public IActionResult getDisabledRequisitosByServiceId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.Estado == false && i.Servicios.Id == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getAllRequisitosByServiceId/{id}")]
+        public IActionResult getAllRequisitosByServiceId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.Servicios.Id == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getRequisitosByModuloId/{id}")]
+        public IActionResult getRequisitosByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.Estado == true && i.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getDisabledRequisitosByModuloId/{id}")]
+        public IActionResult getDisabledRequisitosByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.Estado == false && i.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getAllRequisitosByModuloId/{id}")]
+        public IActionResult getAllRequisitosByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Requisitos.Where(i => i.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    descripcion = i.Descripcion,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    {
+                        Identificador = d.Id,
+                        d.Nombre,
+                        Requisito = d.Requisitos.Descripcion,
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizado con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
             return Ok(oResponse);
         }
         [HttpPost("addRequisito")]
@@ -233,9 +406,11 @@ namespace APISitemaUnivalle.Controllers
                         oresponse.message = "Requisito registrado con exito";
                         oresponse.data = requisito;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
+                        oresponse.message = ex.InnerException.Message;
+                        return BadRequest(oresponse);
                     }
                 }
             }
@@ -247,41 +422,56 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oresponse);
         }
         [HttpPut("updateRequisito/{id}")]
-        public IActionResult updateRequisito(requisito_add_request oModel, int id)
+        public IActionResult updateRequisito(requisito_update_request oModel, int id)
         {
             Response oresponse = new Response();
             try
             {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
                         var requisito = _context.Requisitos.Find(id);
-                        if (requisito == null)
+                        if(requisito == null)
                         {
-                            oresponse.message = "La referencia no existe";
-                            return Ok(oresponse);
+                            oresponse.message = "El requisito no existe";
+                            throw new Exception();
                         }
                         requisito.Descripcion = oModel.Descripcion;
-                        requisito.ServiciosId = requisito.ServiciosId;
-                        requisito.Estado = true;
                         _context.Requisitos.Update(requisito);
                         _context.SaveChanges();
-                        foreach (var paso in oModel.pasos)
+                        if (oModel.pasos != null)
                         {
-                            PasosRequisito pasosReq = new PasosRequisito();
-                            pasosReq.Nombre = paso.Nombre;
-                            pasosReq.RequisitosId = requisito.Id;
-                            pasosReq.Estado = requisito.Estado;
-                            _context.PasosRequisitos.Update(pasosReq);
-                            _context.SaveChanges();
+                            foreach (var paso in oModel.pasos)
+                            {
+                                var pasosReq = _context.PasosRequisitos.Find(paso.id);
+                                if (pasosReq != null)
+                                {
+                                    pasosReq.Nombre = paso.Nombre;
+                                    _context.PasosRequisitos.Update(pasosReq);
+                                    _context.SaveChanges();
+                                }
+
+                            }
                         }
+                        transaction.Commit();
                         oresponse.success = 1;
                         oresponse.message = "Requisito actualizado con exito";
                         oresponse.data = requisito;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        oresponse.message = ex.InnerException.Message;
+                        return BadRequest(oresponse);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 oresponse.message = ex.Message;
                 return BadRequest(oresponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oresponse);
         }
         [HttpPut("deleteRequisito")]

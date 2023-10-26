@@ -21,7 +21,20 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Publicacions;
+                var datos = _context.Publicacions.Select( i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
                 if (datos.Count() == 0)
                 {
                     oResponse.message = "No se encontraron datos validos";
@@ -43,7 +56,20 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Publicacions.Where(p => p.Estado);
+                var datos = _context.Publicacions.Where(p => p.Estado).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
                 if (datos.Count() == 0)
                 {
                     oResponse.message = "No se encontraron publicaciones activas";
@@ -65,7 +91,20 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Publicacions.Where(p => !p.Estado);
+                var datos = _context.Publicacions.Where(p => !p.Estado).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
                 if (datos.Count() == 0)
                 {
                     oResponse.message = "No se encontraron publicaciones inactivas";
@@ -119,7 +158,197 @@ namespace APISitemaUnivalle.Controllers
                     i.Titulo,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
-                    i.Estado
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getDisabledPublicacionesbyServicioId/{id}")]
+        public IActionResult getDisabledPublicacionesbyServicioId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Publicacions.Where(r => r.Estado == false && r.ServiciosId == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getAllPublicacionesbyServicioId/{id}")]
+        public IActionResult getAllPublicacionesbyServicioId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Publicacions.Where(r => r.ServiciosId == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getPublicacionesbyModuloId/{id}")]
+        public IActionResult getPublicacionesbyModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Publicacions.Where(r => r.Estado == true && r.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getDisabledPublicacionesbyModuloId/{id}")]
+        public IActionResult getDisabledPublicacionesbyModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Publicacions.Where(r => r.Estado == false && r.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getAllPublicacionesbyModuloId/{id}")]
+        public IActionResult getAllPublicacionesbyModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+
+                var datos = _context.Publicacions.Where(r => r.IdModulo == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
                 });
                 if (datos.Count() == 0)
                 {
@@ -138,7 +367,7 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
         }
         [HttpPost("AddPublicaciones")]
-        public IActionResult addCliente(Publicacion_add_Request oPublicacion)
+        public IActionResult addPublicacion(Publicacion_add_Request oPublicacion)
         {
             Response oResponse = new Response();
             try
@@ -166,7 +395,59 @@ namespace APISitemaUnivalle.Controllers
             return Ok(oResponse);
 
         }
-        [HttpPut("UpdatePublicaciones")]
+        [HttpPost("addPublicacionWithDescription")]
+        public IActionResult addPublicacionWithDescription(Publicacion_add_Request oPublicacion)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                using(var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        Publicacion npublicacion = new Publicacion();
+                        //npublicacion.Id = oPublicacion.Id;
+                        npublicacion.Archivo = oPublicacion.Archivo;
+                        npublicacion.ServiciosId = oPublicacion.ServiciosId;
+                        npublicacion.IdModulo = oPublicacion.id_modulo;
+                        npublicacion.Titulo = oPublicacion.Titulo;
+                        npublicacion.Estado = oPublicacion.Estado;
+                        _context.Publicacions.Add(npublicacion);
+                        _context.SaveChanges();
+                        if(oPublicacion.descripcionPublicacion != null)
+                        {
+                            foreach (var des in oPublicacion.descripcionPublicacion)
+                            {
+                                DescripcionPublicacion nDes = new DescripcionPublicacion();
+                                nDes.IdPublicacion = npublicacion.Id;
+                                nDes.Contenido = des.Contenido;
+                                nDes.Estado = true;
+                                _context.DescripcionPublicacions.Add(nDes);
+                                _context.SaveChanges();
+                            }
+                        }
+                        oResponse.message = "Agregado con exito";
+                        oResponse.success = 1;
+                        oResponse.data = npublicacion;
+                        transaction.Commit();
+                    }
+                    catch(Exception ex)
+                    {
+                        transaction.Rollback();
+                        oResponse.message = ex.InnerException.Message;
+                    }
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                oResponse.message = ex.InnerException.Message;
+            }
+            return Ok(oResponse);
+
+        }
+        [HttpPut("UpdatePublicaciones/{id}")]
         public IActionResult UpdatePublicaciones(Publicacion_edit_Request oPublicacion, int id)
         {
             Response oResponse = new Response();
@@ -179,7 +460,6 @@ namespace APISitemaUnivalle.Controllers
                     return Ok(oResponse);
                 }
                 publicacion.Archivo = oPublicacion.Archivo;
-                publicacion.ServiciosId = oPublicacion.ServiciosId;
                 publicacion.Titulo = oPublicacion.Titulo;
                 _context.Publicacions.Update(publicacion);
                 _context.SaveChanges();

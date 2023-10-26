@@ -129,7 +129,6 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
 
@@ -179,7 +178,6 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
 
@@ -240,6 +238,66 @@ namespace APISitemaUnivalle.Controllers
             try
             {
                 var datos = _context.Servicios.Where(i => i.Estado == true && i.ModuloId == id).Select(i => new
+                {
+                    identificador = i.Id,
+                    nombre = i.Nombre,
+                    modulo = i.Modulo.Nombremodulo,
+                    imagen = i.ImagenUrl,
+                    i.Estado
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return BadRequest(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getDisabledServicioByModuloId/{id}")]
+        public IActionResult getDisabledServicioByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Where(i => i.Estado == false && i.ModuloId == id).Select(i => new
+                {
+                    identificador = i.Id,
+                    nombre = i.Nombre,
+                    modulo = i.Modulo.Nombremodulo,
+                    imagen = i.ImagenUrl,
+                    i.Estado
+                });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return BadRequest(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpGet("getAllServiciosByModuloId/{id}")]
+        public IActionResult getAllServiciosByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Servicios.Where(i => i.ModuloId == id).Select(i => new
                 {
                     identificador = i.Id,
                     nombre = i.Nombre,
@@ -415,7 +473,6 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
 
