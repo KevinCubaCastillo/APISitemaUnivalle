@@ -126,7 +126,20 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var publicacion = _context.Publicacions.FirstOrDefault(p => p.Id == id);
+                var publicacion = _context.Publicacions.Where(p => p.Id == id).Select(i => new
+                {
+                    Identificador = i.Id,
+                    i.Archivo,
+                    i.Titulo,
+                    servicio = i.Servicios.Nombre,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
+                    descripcion = i.DescripcionPublicacions.Select(d => new
+                    {
+                        d.IdDescripcion,
+                        d.Contenido
+                    })
+                });
 
                 if (publicacion == null)
                 {
@@ -467,6 +480,63 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.success = 1;
                 oResponse.data = publicacion;
                 return Ok(oResponse);
+
+
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpPut("UpdatePublicacionesWithDescription/{id}")]
+        public IActionResult UpdatePublicacionesWithDescription(Publicacion_edit_Request oPublicacion, int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var publicacion = _context.Publicacions.Find(id);
+                        if (publicacion == null)
+                        {
+                            oResponse.message = "El cliente no existe";
+                            throw new Exception();
+                        }
+                        publicacion.Archivo = oPublicacion.Archivo;
+                        publicacion.Titulo = oPublicacion.Titulo;
+                        _context.Publicacions.Update(publicacion);
+                        _context.SaveChanges();
+                        if (oPublicacion.descripcionPublicacion != null)
+                        {
+                            foreach (var des in oPublicacion.descripcionPublicacion)
+                            {
+                                var descripcion = _context.DescripcionPublicacions.Find(des.Id);
+                                if (descripcion == null)
+                                {
+                                    throw new Exception();
+                                }
+                                descripcion.Contenido = des.Contenido;
+                                _context.DescripcionPublicacions.Update(descripcion);
+                                _context.SaveChanges();
+                            }
+                        }
+                        oResponse.message = "Editado con exito";
+                        oResponse.success = 1;
+                        oResponse.data = publicacion;
+                        transaction.Commit();
+                        return Ok(oResponse);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        oResponse.message = ex.Message;
+                    }
+                }
+
             }
             catch (Exception ex)
             {

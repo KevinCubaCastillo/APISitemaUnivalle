@@ -2,9 +2,19 @@
 {
     public class Publicacion_edit_Request
     {
-        //public int Id { get; set; }
         public string Archivo { get; set; } = null!;
         public string Titulo { get; set; } = null!;
-        //public bool Estado { get; set; }
+        public List<descripcionEditPub> descripcionPublicacion { get; set; }
+        public Publicacion_edit_Request()
+        {
+            descripcionPublicacion = new List<descripcionEditPub>();
+        }
+
+    }
+    public class descripcionEditPub
+    {
+        public int Id { get; set; }
+        public string Contenido { get; set; } = null!;
+
     }
 }
