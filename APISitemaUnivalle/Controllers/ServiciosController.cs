@@ -4,6 +4,7 @@ using APISitemaUnivalle.Models.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Security.AccessControl;
 
 namespace APISitemaUnivalle.Controllers
@@ -188,7 +189,22 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Where(i => i.Estado == true).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Where(e => e.Modulo.Nombremodulo.Equals(name));
+              //   var datos = _context.Servicios.Where(i => i.Estado == true).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Where(e => e.Modulo.Nombremodulo.Equals(name));
+              
+                var datos = _context.Servicios.Where(i => i.Estado == true).Where(e => e.Modulo.Nombremodulo.Equals(name)).Select(i => new
+                {
+                    id = i.Id,
+                    nombre = i.Nombre,
+                    modulo = i.Modulo.Nombremodulo,
+                    Categoria = i.IdCategoriaNavigation.NombreCategoria,
+                    imagen = i.ImagenUrl,
+                    i.Estado,
+                    Ubicaciones = i.Ubicaciones,
+                    Referencia = i.Referencia,
+                    Tramites = i.Tramites
+                });
+                
+                
                 if (datos == null)
                 {
                     oResponse.message = "No se encontraron datos";
@@ -213,7 +229,56 @@ namespace APISitemaUnivalle.Controllers
             Response oResponse = new Response();
             try
             {
-                var datos = _context.Servicios.Where(i => i.Estado == false).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Where(e => e.Modulo.Nombremodulo.Equals(name));
+             //   var datos = _context.Servicios.Where(i => i.Estado == false).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Include(e => e.IdCategoriaNavigation.Descripcion).Where(e => e.Modulo.Nombremodulo.Equals(name));
+                var datos = _context.Servicios.Where(i => i.Estado == false).Where(e => e.Modulo.Nombremodulo.Equals(name)).Select(i => new
+                {
+                    id = i.Id,
+                    nombre = i.Nombre,
+                    modulo = i.Modulo.Nombremodulo,
+                    Categoria = i.IdCategoriaNavigation.NombreCategoria,
+                    imagen = i.ImagenUrl,
+                    i.Estado,
+                    Ubicaciones = i.Ubicaciones,
+                    Referencia = i.Referencia,
+                    Tramites = i.Tramites
+                });
+                if (datos == null)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.message = "Solicitud realizada con exito";
+                oResponse.success = 1;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+            return Ok(oResponse);
+        }
+        [HttpGet("getTramiteByCategory/{id}")]
+        public IActionResult getTramiteByNameCategory(string id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                //   var datos = _context.Servicios.Where(i => i.Estado == false).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Include(e => e.IdCategoriaNavigation.Descripcion).Where(e => e.Modulo.Nombremodulo.Equals(name));
+              
+                var datos = _context.Servicios.Where(i => i.Estado == false).Where(e => e.IdCategoriaNavigation.NombreCategoria.Equals(id)).Select(i => new
+                {
+                    id = i.Id,
+                    nombre = i.Nombre,
+                    modulo = i.Modulo.Nombremodulo,
+                    Categoria = i.IdCategoriaNavigation.NombreCategoria,
+                    imagenUrl = i.ImagenUrl,
+                    i.Estado,
+                    Ubicaciones = i.Ubicaciones,
+                    Referencia = i.Referencia,
+                    Tramites = i.Tramites
+                });
                 if (datos == null)
                 {
                     oResponse.message = "No se encontraron datos";
@@ -337,6 +402,7 @@ namespace APISitemaUnivalle.Controllers
                 servicio.Nombre = oModel.Nombre;
                 servicio.ModuloId = oModel.ModuloId;
                 servicio.ImagenUrl = oModel.ImagenUrl;
+                servicio.IdCategoria = oModel.IdCategoria;
                 servicio.Estado = true;
                 _context.Servicios.Add(servicio);
                 _context.SaveChanges();
@@ -461,6 +527,7 @@ namespace APISitemaUnivalle.Controllers
                 }
                 servicio.Nombre = oModel.Nombre;
                 servicio.ImagenUrl = oModel.ImagenUrl;
+                servicio.IdCategoria = oModel.IdCategoria;
                 servicio.Estado = true;
                 _context.Servicios.Update(servicio);
                 _context.SaveChanges();

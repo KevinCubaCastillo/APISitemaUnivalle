@@ -174,7 +174,7 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
-                    pasosRequisito = i.PasosRequisitos.Select(d => new
+                    pasosRequisito = i.PasosRequisitos.Where(d => d.Estado == true).Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
@@ -386,6 +386,7 @@ namespace APISitemaUnivalle.Controllers
                         requisito.Descripcion = oModel.Descripcion;
                         requisito.ServiciosId = oModel.ServiciosId;
                         requisito.IdModulo = oModel.id_modulo;
+                      
                         requisito.Estado = true;
                         _context.Requisitos.Add(requisito);
                         _context.SaveChanges();
@@ -474,7 +475,7 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oresponse);
         }
-        [HttpPut("deleteRequisito")]
+        [HttpPut("deleteRequisito/{id}")]
         public IActionResult deleteRequisito(int id)
         {
             Response oResponse = new Response();
@@ -522,7 +523,46 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-        [HttpPut("restoreRequisito")]
+
+        [HttpPut("deletePasoRequisito/{id}")]
+        public IActionResult deletePasoRequisito(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var pasoRequisito = _context.PasosRequisitos.Find(id);
+                        if (pasoRequisito == null)
+                        {
+                            oResponse.message = "El paso de requisito no existe";
+                            throw new Exception();
+                        }
+                        pasoRequisito.Estado = false;
+                        _context.PasosRequisitos.Update(pasoRequisito);
+                        _context.SaveChanges();
+
+                        oResponse.success = 1;
+                        oResponse.message = "Paso de requisito eliminado con éxito";
+                        oResponse.data = pasoRequisito;
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpPut("restoreRequisito/{id}")]
         public IActionResult restoreRequisito(int id)
         {
             Response oResponse = new Response();

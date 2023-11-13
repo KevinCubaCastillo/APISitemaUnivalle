@@ -4,5 +4,6 @@
     {
         public string Nombre { get; set; } = null!;
         public string? ImagenUrl { get; set; }
+        public int? IdCategoria { get; set; }
     }
 }
