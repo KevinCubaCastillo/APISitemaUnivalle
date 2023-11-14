@@ -6,7 +6,7 @@ namespace APISitemaUnivalle.Models
     public partial class PasosRequisito
     {
         public int Id { get; set; }
-        public int Nombre { get; set; }
+        public string Nombre { get; set; } = null!;
         public int RequisitosId { get; set; }
         public bool Estado { get; set; }
 

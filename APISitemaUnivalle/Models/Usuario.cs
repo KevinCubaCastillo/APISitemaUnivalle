@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace APISitemaUnivalle.Models
 {
@@ -10,10 +11,12 @@ namespace APISitemaUnivalle.Models
             UsuarioModulos = new HashSet<UsuarioModulo>();
         }
 
-        public int Id { get; set; }
-        public string? Clave { get; set; } = null!;
+        public string CiUsuario { get; set; } = null!;
+        public string Clave { get; set; } = null!;
         public bool Estado { get; set; }
-        public int PersonalId { get; set; }
+        public string Nombres { get; set; } = null!;
+        public string Apellidos { get; set; } = null!;
+        public int CargoId { get; set; }
 
         public virtual Cargo Cargo { get; set; } = null!;
         public virtual ICollection<UsuarioModulo> UsuarioModulos { get; set; }

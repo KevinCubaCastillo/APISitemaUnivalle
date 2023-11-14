@@ -21,6 +21,7 @@ namespace APISitemaUnivalle.Models
         public int Id { get; set; }
         public string Nombremodulo { get; set; } = null!;
         public bool Estado { get; set; }
+        public string? CiUsuario { get; set; }
 
         public virtual ICollection<Carrera> Carreras { get; set; }
         public virtual ICollection<Horario> Horarios { get; set; }
