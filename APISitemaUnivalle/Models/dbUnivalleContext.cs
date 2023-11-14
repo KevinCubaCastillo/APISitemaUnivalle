@@ -195,44 +195,6 @@ namespace APISitemaUnivalle.Models
                     .HasConstraintName("descripcion_publicacion_id_publicacion_fkey");
             });
 
-            modelBuilder.Entity<Categorium>(entity =>
-            {
-                entity.HasKey(e => e.IdCategoria)
-                    .HasName("categoria_pkey");
-
-                entity.ToTable("categoria");
-
-                entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
-
-                entity.Property(e => e.Descripcion).HasColumnName("descripcion");
-
-                entity.Property(e => e.Estado).HasColumnName("estado");
-
-                entity.Property(e => e.NombreCategoria).HasColumnName("nombre_categoria");
-            });
-
-            modelBuilder.Entity<DescripcionPublicacion>(entity =>
-            {
-                entity.HasKey(e => e.IdDescripcion)
-                    .HasName("descripcion_publicacion_pkey");
-
-                entity.ToTable("descripcion_publicacion");
-
-                entity.Property(e => e.IdDescripcion).HasColumnName("id_descripcion");
-
-                entity.Property(e => e.Contenido).HasColumnName("contenido");
-
-                entity.Property(e => e.Estado).HasColumnName("estado");
-
-                entity.Property(e => e.IdPublicacion).HasColumnName("id_publicacion");
-
-                entity.HasOne(d => d.IdPublicacionNavigation)
-                    .WithMany(p => p.DescripcionPublicacions)
-                    .HasForeignKey(d => d.IdPublicacion)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("descripcion_publicacion_id_publicacion_fkey");
-            });
-
             modelBuilder.Entity<Dia>(entity =>
             {
                 entity.HasKey(e => e.IdDias)
@@ -306,18 +268,11 @@ namespace APISitemaUnivalle.Models
                     .HasColumnName("id")
                     .HasDefaultValueSql("nextval('modulo_id_seq1'::regclass)");
 
-                entity.Property(e => e.CiUsuario).HasColumnName("ci_usuario");
-
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
                 entity.Property(e => e.Nombremodulo)
                     .HasMaxLength(50)
                     .HasColumnName("nombremodulo");
-
-                entity.HasOne(d => d.CiUsuarioNavigation)
-                    .WithMany(p => p.Modulos)
-                    .HasForeignKey(d => d.CiUsuario)
-                    .HasConstraintName("ci_usuario");
             });
 
             modelBuilder.Entity<PasosRequisito>(entity =>
@@ -563,20 +518,9 @@ namespace APISitemaUnivalle.Models
 
                 entity.HasOne(d => d.Cargo)
                     .WithMany(p => p.Usuarios)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "Relation14",
-                        l => l.HasOne<Modulo>().WithMany().HasForeignKey("ModuloId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("relation_14_modulo_fk"),
-                        r => r.HasOne<Usuario>().WithMany().HasForeignKey("UsuariosId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("relation_14_usuarios_fk"),
-                        j =>
-                        {
-                            j.HasKey("UsuariosId", "ModuloId").HasName("relation_14_pkey");
-
-                            j.ToTable("relation_14");
-
-                            j.IndexerProperty<int>("UsuariosId").HasColumnName("usuarios_id");
-
-                            j.IndexerProperty<int>("ModuloId").HasColumnName("modulo_id");
-                        });
+                    .HasForeignKey(d => d.CargoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("cargo_id");
             });
 
             modelBuilder.Entity<UsuarioModulo>(entity =>
