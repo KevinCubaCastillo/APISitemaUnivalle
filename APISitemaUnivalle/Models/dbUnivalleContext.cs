@@ -16,8 +16,13 @@ namespace APISitemaUnivalle.Models
         {
         }
 
+        public virtual DbSet<Atencion> Atencions { get; set; } = null!;
         public virtual DbSet<Cargo> Cargos { get; set; } = null!;
         public virtual DbSet<Carrera> Carreras { get; set; } = null!;
+        public virtual DbSet<Categorium> Categoria { get; set; } = null!;
+        public virtual DbSet<DescripcionPublicacion> DescripcionPublicacions { get; set; } = null!;
+        public virtual DbSet<Dia> Dias { get; set; } = null!;
+        public virtual DbSet<Horario> Horarios { get; set; } = null!;
         public virtual DbSet<Modificacione> Modificaciones { get; set; } = null!;
         public virtual DbSet<Modulo> Modulos { get; set; } = null!;
         public virtual DbSet<PasosRequisito> PasosRequisitos { get; set; } = null!;
@@ -29,18 +34,86 @@ namespace APISitemaUnivalle.Models
         public virtual DbSet<Tramite> Tramites { get; set; } = null!;
         public virtual DbSet<Ubicacione> Ubicaciones { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
+        public virtual DbSet<UsuarioModulo> UsuarioModulos { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Server=buzk2uterw6mfakgkyig-postgresql.services.clever-cloud.com;Database=buzk2uterw6mfakgkyig;Username=u7hypr2dfcfjvdrcdyb5;Password=e6mJGvcYuLMsoDyiv5xNp5xppUwKh0;Port=5432;");
+                optionsBuilder.UseNpgsql("Server=bvsvtzxi4y9qfjd9u6l7-postgresql.services.clever-cloud.com;Database=bvsvtzxi4y9qfjd9u6l7;Username=u7hypr2dfcfjvdrcdyb5;Password=IuPySnm11l2FTB2GutaU;Port=50013;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasPostgresExtension("pg_catalog", "adminpack")
+                .HasPostgresExtension("pg_catalog", "plls")
+                .HasPostgresExtension("pg_catalog", "plv8")
+                .HasPostgresExtension("autoinc")
+                .HasPostgresExtension("btree_gin")
+                .HasPostgresExtension("btree_gist")
+                .HasPostgresExtension("citext")
+                .HasPostgresExtension("cube")
+                .HasPostgresExtension("dblink")
+                .HasPostgresExtension("dict_int")
+                .HasPostgresExtension("dict_xsyn")
+                .HasPostgresExtension("earthdistance")
+                .HasPostgresExtension("file_fdw")
+                .HasPostgresExtension("fuzzystrmatch")
+                .HasPostgresExtension("hstore")
+                .HasPostgresExtension("insert_username")
+                .HasPostgresExtension("intagg")
+                .HasPostgresExtension("intarray")
+                .HasPostgresExtension("isn")
+                .HasPostgresExtension("lo")
+                .HasPostgresExtension("ltree")
+                .HasPostgresExtension("moddatetime")
+                .HasPostgresExtension("pageinspect")
+                .HasPostgresExtension("pg_buffercache")
+                .HasPostgresExtension("pg_freespacemap")
+                .HasPostgresExtension("pg_stat_statements")
+                .HasPostgresExtension("pg_trgm")
+                .HasPostgresExtension("pgcrypto")
+                .HasPostgresExtension("pgrowlocks")
+                .HasPostgresExtension("pgstattuple")
+                .HasPostgresExtension("postgis")
+                .HasPostgresExtension("refint")
+                .HasPostgresExtension("seg")
+                .HasPostgresExtension("sslinfo")
+                .HasPostgresExtension("tablefunc")
+                .HasPostgresExtension("tcn")
+                .HasPostgresExtension("unaccent")
+                .HasPostgresExtension("uuid-ossp")
+                .HasPostgresExtension("xml2")
+                .HasPostgresExtension("tiger", "postgis_tiger_geocoder");
+
+            modelBuilder.Entity<Atencion>(entity =>
+            {
+                entity.HasKey(e => e.IdAtencion)
+                    .HasName("atencion_pkey");
+
+                entity.ToTable("atencion");
+
+                entity.Property(e => e.IdAtencion).HasColumnName("id_atencion");
+
+                entity.Property(e => e.Estado).HasColumnName("estado");
+
+                entity.Property(e => e.IdDia).HasColumnName("id_dia");
+
+                entity.Property(e => e.IdHorarios).HasColumnName("id_horarios");
+
+                entity.HasOne(d => d.IdDiaNavigation)
+                    .WithMany(p => p.Atencions)
+                    .HasForeignKey(d => d.IdDia)
+                    .HasConstraintName("atencion_id_dia_fkey");
+
+                entity.HasOne(d => d.IdHorariosNavigation)
+                    .WithMany(p => p.Atencions)
+                    .HasForeignKey(d => d.IdHorarios)
+                    .HasConstraintName("atencion_id_horarios_fkey");
+            });
+
             modelBuilder.Entity<Cargo>(entity =>
             {
                 entity.ToTable("cargo");
@@ -85,6 +158,88 @@ namespace APISitemaUnivalle.Models
                     .HasForeignKey(d => d.ServiciosId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("carrera_servicios_fk");
+            });
+
+            modelBuilder.Entity<Categorium>(entity =>
+            {
+                entity.HasKey(e => e.IdCategoria)
+                    .HasName("categoria_pkey");
+
+                entity.ToTable("categoria");
+
+                entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
+
+                entity.Property(e => e.Descripcion).HasColumnName("descripcion");
+
+                entity.Property(e => e.Estado).HasColumnName("estado");
+
+                entity.Property(e => e.NombreCategoria).HasColumnName("nombre_categoria");
+            });
+
+            modelBuilder.Entity<DescripcionPublicacion>(entity =>
+            {
+                entity.HasKey(e => e.IdDescripcion)
+                    .HasName("descripcion_publicacion_pkey");
+
+                entity.ToTable("descripcion_publicacion");
+
+                entity.Property(e => e.IdDescripcion).HasColumnName("id_descripcion");
+
+                entity.Property(e => e.Contenido).HasColumnName("contenido");
+
+                entity.Property(e => e.Estado).HasColumnName("estado");
+
+                entity.Property(e => e.IdPublicacion).HasColumnName("id_publicacion");
+
+                entity.HasOne(d => d.IdPublicacionNavigation)
+                    .WithMany(p => p.DescripcionPublicacions)
+                    .HasForeignKey(d => d.IdPublicacion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("descripcion_publicacion_id_publicacion_fkey");
+            });
+
+            modelBuilder.Entity<Dia>(entity =>
+            {
+                entity.HasKey(e => e.IdDias)
+                    .HasName("dias_pkey");
+
+                entity.ToTable("dias");
+
+                entity.Property(e => e.IdDias).HasColumnName("id_dias");
+
+                entity.Property(e => e.Estado).HasColumnName("estado");
+
+                entity.Property(e => e.NombreDia).HasColumnName("nombre_dia");
+            });
+
+            modelBuilder.Entity<Horario>(entity =>
+            {
+                entity.HasKey(e => e.IdHorarios)
+                    .HasName("horarios_pkey");
+
+                entity.ToTable("horarios");
+
+                entity.Property(e => e.IdHorarios).HasColumnName("id_horarios");
+
+                entity.Property(e => e.Estado).HasColumnName("estado");
+
+                entity.Property(e => e.HoraFin).HasColumnName("hora_fin");
+
+                entity.Property(e => e.HoraInicio).HasColumnName("hora_inicio");
+
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
+                entity.Property(e => e.IdServicio).HasColumnName("id_servicio");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.Horarios)
+                    .HasForeignKey(d => d.IdModulo)
+                    .HasConstraintName("horarios_id_modulo_fkey");
+
+                entity.HasOne(d => d.IdServicioNavigation)
+                    .WithMany(p => p.Horarios)
+                    .HasForeignKey(d => d.IdServicio)
+                    .HasConstraintName("horarios_id_servicio_fkey");
             });
 
             modelBuilder.Entity<Modificacione>(entity =>
@@ -365,6 +520,29 @@ namespace APISitemaUnivalle.Models
 
                             j.IndexerProperty<int>("ModuloId").HasColumnName("modulo_id");
                         });
+            });
+
+            modelBuilder.Entity<UsuarioModulo>(entity =>
+            {
+                entity.ToTable("usuario_modulo");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CiUsuario).HasColumnName("ci_usuario");
+
+                entity.Property(e => e.IdModulo).HasColumnName("id_modulo");
+
+                entity.HasOne(d => d.CiUsuarioNavigation)
+                    .WithMany(p => p.UsuarioModulos)
+                    .HasForeignKey(d => d.CiUsuario)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ci_usuario");
+
+                entity.HasOne(d => d.IdModuloNavigation)
+                    .WithMany(p => p.UsuarioModulos)
+                    .HasForeignKey(d => d.IdModulo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("id_modulo");
             });
 
             modelBuilder.HasSequence("cargo_id_seq");

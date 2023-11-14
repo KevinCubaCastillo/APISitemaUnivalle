@@ -7,7 +7,7 @@ namespace APISitemaUnivalle.Models
     {
         public Usuario()
         {
-            Modulos = new HashSet<Modulo>();
+            UsuarioModulos = new HashSet<UsuarioModulo>();
         }
 
         public int Id { get; set; }
@@ -15,6 +15,7 @@ namespace APISitemaUnivalle.Models
         public bool Estado { get; set; }
         public int PersonalId { get; set; }
 
-        public virtual ICollection<Modulo> Modulos { get; set; }
+        public virtual Cargo Cargo { get; set; } = null!;
+        public virtual ICollection<UsuarioModulo> UsuarioModulos { get; set; }
     }
 }
