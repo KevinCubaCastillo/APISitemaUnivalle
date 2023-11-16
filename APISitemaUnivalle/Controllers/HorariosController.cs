@@ -67,6 +67,169 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpGet("getHorarioById/{id}")]
+        public IActionResult getHorarioById(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Horarios.Select(i => new
+                {
+                    i.IdHorarios,
+                    i.HoraInicio,
+                    i.HoraFin,
+                    modulo = i.IdModuloNavigation.Nombremodulo,
+                    servicio = i.IdServicioNavigation.Nombre,
+                    i.Estado,
+                    diasAtencion = i.Atencions.Select(a => new
+                    {
+                        a.IdAtencion,
+                        a.IdDiaNavigation.NombreDia,
+                    })
+                }).Where(i => i.IdHorarios == id);
+
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+
+        }
+
+        [HttpGet("getHorarioByModuloId/{id}")]
+        public IActionResult getHorarioByModuloId(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Horarios
+                    .Where(i => i.IdModulo == id)
+                    .Select(i => new
+                    {
+                        i.IdHorarios,
+                        i.HoraInicio,
+                        i.HoraFin,
+                        modulo = i.IdModuloNavigation.Nombremodulo,
+                        servicio = i.IdServicioNavigation.Nombre,
+                        i.Estado,
+                        diasAtencion = i.Atencions.Select(a => new
+                        {
+                            a.IdAtencion,
+                            a.IdDiaNavigation.NombreDia,
+                        })
+                    });
+
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getHorarioByModuloIdActive/{id}")]
+        public IActionResult getHorarioByModuloIdActive(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Horarios
+                    .Where(i => i.IdModulo == id && i.Estado == true)
+                    .Select(i => new
+                    {
+                        i.IdHorarios,
+                        i.HoraInicio,
+                        i.HoraFin,
+                        modulo = i.IdModuloNavigation.Nombremodulo,
+                        servicio = i.IdServicioNavigation.Nombre,
+                        i.Estado,
+                        diasAtencion = i.Atencions.Select(a => new
+                        {
+                            a.IdAtencion,
+                            a.IdDiaNavigation.NombreDia,
+                        })
+                    });
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpGet("getHorarioByModuloIdInActive/{id}")]
+        public IActionResult getHorarioByModuloIdInActive(int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var datos = _context.Horarios
+                    .Where(i => i.IdModulo == id && i.Estado == false)
+                    .Select(i => new
+                    {
+                        i.IdHorarios,
+                        i.HoraInicio,
+                        i.HoraFin,
+                        modulo = i.IdModuloNavigation.Nombremodulo,
+                        servicio = i.IdServicioNavigation.Nombre,
+                        i.Estado,
+                        diasAtencion = i.Atencions.Select(a => new
+                        {
+                            a.IdAtencion,
+                            a.IdDiaNavigation.NombreDia,
+                        })
+                    });
+
+                if (datos.Count() == 0)
+                {
+                    oResponse.message = "No se encontraron datos";
+                    return NotFound(oResponse);
+                }
+                oResponse.data = datos;
+                oResponse.success = 1;
+                oResponse.message = "Solicitud realizada con exito";
+
+
+                oResponse.success = 1;
+                oResponse.data = datos;
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
         [HttpPost("addHorario")]
         public IActionResult addHorario(horario_add_request oModel)
         {
@@ -113,11 +276,6 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
-
-
-
-
-
 
         [HttpGet("getHorariosbyServicioId/{id}")]
         public IActionResult getHorariosbyServicioId(int id)
@@ -225,6 +383,62 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.message = "Solicitud realizada con exito";
             }
             catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpPut("updateHorarios/{id}")]
+        public IActionResult updateHorarios(Horario_update_request oModel ,int id)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var horario = _context.Horarios.Find(id);
+                        if (horario == null)
+                        {
+                            oResponse.message = "El horario no existe";
+                            throw new Exception();
+                        }
+                        horario.HoraInicio = oModel.HoraInicio;
+                        horario.HoraFin = oModel.HoraFin;
+                        horario.IdModulo = oModel.IdModulo;
+                        horario.IdServicio = oModel.IdServicio;
+                        _context.Horarios.Update(horario);
+                        _context.SaveChanges();
+                        if (oModel.listAtencion != null)
+                        {
+                            foreach (var dia in oModel.listAtencion)
+                            {
+                                var diaAt = _context.Atencions.Find(dia.id);
+                                if (diaAt != null)
+                                {
+                                    diaAt.IdDia = dia.IdDia;
+                                    _context.Atencions.Update(diaAt);
+                                    _context.SaveChanges();
+                                }
+
+                            }
+                        }
+                        transaction.Commit();
+                        oResponse.success = 1;
+                        oResponse.message = "Horario actualizado con exito";
+                        oResponse.data = horario;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        oResponse.message = ex.InnerException.Message;
+                        return BadRequest(oResponse);
+                    }
+                }
+            }
+            catch(Exception ex)
             {
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);

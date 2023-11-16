@@ -251,6 +251,59 @@ namespace APISitemaUnivalle.Controllers
             }
             return Ok(oResponse);
         }
+        [HttpPost("addUserWithModulo")]
+        public IActionResult addUserWithModulo(usuario_modulo_add_request oModel)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                using(var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var verf = _context.Usuarios.Find(oModel.CiUsuario);
+                        if (verf != null)
+                        {
+                            oResponse.message = "El usuario ya se encuentra registrado.";
+                            return BadRequest(oResponse);
+                        }
+                        Usuario user = new Usuario();
+                        user.CiUsuario = oModel.CiUsuario;
+                        user.Clave = Encrypt.GetSHA256(oModel.Clave);
+                        user.Nombres = oModel.Nombres;
+                        user.Apellidos = oModel.Apellidos;
+                        user.CargoId = oModel.CargoId;
+                        user.Estado = true;
+                        _context.Usuarios.Add(user);
+                        _context.SaveChanges();
+                        foreach(var modulo in oModel.listModulo)
+                        {
+                            UsuarioModulo usuarioModulo = new UsuarioModulo();
+                            usuarioModulo.CiUsuario = user.CiUsuario;
+                            usuarioModulo.IdModulo = modulo.id_modulo;
+                            _context.UsuarioModulos.Add(usuarioModulo);
+                            _context.SaveChanges();
+                        }
+                        transaction.Commit();
+                        oResponse.success = 1;
+                        oResponse.message = "Usuario registrado con exito";
+                        oResponse.data = user;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        oResponse.message = ex.Message;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
         [HttpPut("updateUser/{ci}")]
         public IActionResult updateUser(usuario_update_request oModel, string ci)
         {
@@ -272,6 +325,37 @@ namespace APISitemaUnivalle.Controllers
                 oResponse.data = user;
             }
             catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+        [HttpPut ("changePassword/{ci}")]
+        public IActionResult changePassword(usuario_changePassword_request oModel, string ci)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                var user = _context.Usuarios.Find(ci);
+                if(user == null)
+                {
+                    oResponse.message = "El usuario no existe.";
+                    return BadRequest(oResponse);
+                }
+                if(Encrypt.GetSHA256(oModel.newPassword) == user.Clave)
+                {
+                    oResponse.message = "La contraseña no cambio";
+                    return BadRequest(oResponse);
+                }
+                user.Clave = Encrypt.GetSHA256(oModel.newPassword);
+                _context.Usuarios.Update(user);
+                _context.SaveChanges();
+                oResponse.success = 1;
+                oResponse.message = "Contraseña actualizada con exito.";
+                oResponse.data = user;
+            }
+            catch(Exception ex)
             {
                 oResponse.message = ex.Message;
                 return BadRequest(oResponse);

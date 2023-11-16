@@ -174,11 +174,13 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Where(d => d.Estado == true).Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -209,11 +211,13 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -244,11 +248,13 @@ namespace APISitemaUnivalle.Controllers
                     Identificador = i.Id,
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -279,11 +285,13 @@ namespace APISitemaUnivalle.Controllers
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -314,11 +322,13 @@ namespace APISitemaUnivalle.Controllers
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
@@ -349,11 +359,13 @@ namespace APISitemaUnivalle.Controllers
                     descripcion = i.Descripcion,
                     servicio = i.Servicios.Nombre,
                     modulo = i.IdModuloNavigation.Nombremodulo,
+                    i.Estado,
                     pasosRequisito = i.PasosRequisitos.Select(d => new
                     {
                         Identificador = d.Id,
                         d.Nombre,
                         Requisito = d.Requisitos.Descripcion,
+                        d.Estado
                     })
                 });
                 if (datos.Count() == 0)
