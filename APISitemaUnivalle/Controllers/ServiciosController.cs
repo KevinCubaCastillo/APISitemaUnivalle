@@ -259,15 +259,15 @@ namespace APISitemaUnivalle.Controllers
             Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
             return Ok(oResponse);
         }
-        [HttpGet("getTramiteByCategory/{id}")]
-        public IActionResult getTramiteByNameCategory(string id)
+        [HttpGet("getTramiteByCategory/{name}")]
+        public IActionResult getTramiteByNameCategory(string name)
         {
             Response oResponse = new Response();
             try
             {
                 //   var datos = _context.Servicios.Where(i => i.Estado == false).Include(e => e.Ubicaciones).Include(e => e.Referencia).Include(e => e.Tramites).Include(e => e.IdCategoriaNavigation.Descripcion).Where(e => e.Modulo.Nombremodulo.Equals(name));
               
-                var datos = _context.Servicios.Where(i => i.Estado == false).Where(e => e.IdCategoriaNavigation.NombreCategoria.Equals(id)).Select(i => new
+                var datos = _context.Servicios.Where(i => i.Estado == true).Where(e => e.IdCategoriaNavigation.NombreCategoria.Equals(name)).Select(i => new
                 {
                     id = i.Id,
                     nombre = i.Nombre,
