@@ -197,7 +197,7 @@ namespace APISitemaUnivalle.Controllers
                     nombre = i.Nombre,
                     modulo = i.Modulo.Nombremodulo,
                     Categoria = i.IdCategoriaNavigation.NombreCategoria,
-                    imagenUrl = i.ImagenUrl,
+                    imagen = i.ImagenUrl,
                     i.Estado,
                     Ubicaciones = i.Ubicaciones,
                     Referencia = i.Referencia,
@@ -505,6 +505,110 @@ namespace APISitemaUnivalle.Controllers
                     }
                 }
                 
+            }
+            catch (Exception ex)
+            {
+                oResponse.message = ex.Message;
+                return BadRequest(oResponse);
+            }
+            return Ok(oResponse);
+        }
+
+        [HttpPost("addTramite")]
+        public IActionResult addTramite(tramite_add_request_all oModel)
+        {
+            Response oResponse = new Response();
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var verify = _context.Servicios.FirstOrDefault(i => (i.Nombre).ToUpper() == (oModel.Nombre).ToUpper() && i.ModuloId == oModel.ModuloId);
+                        if (verify != null)
+                        {
+                            oResponse.message = "El tramite ya existe";
+                            throw new Exception();
+                        }
+                        Servicio servicio = new Servicio();
+                        servicio.Nombre = oModel.Nombre;
+                        servicio.ModuloId = oModel.ModuloId;
+                        servicio.ImagenUrl = oModel.ImagenUrl;
+                        servicio.IdCategoria = oModel.IdCategoria;
+                        servicio.Estado = true;
+                        _context.Servicios.Add(servicio);
+                        _context.SaveChanges();
+                        if (oModel.referenciaAdd != null)
+                        {
+                            Referencium referencia = new Referencium();
+                            referencia.Nombre = oModel.referenciaAdd.Nombre;
+                            referencia.Numerocel = oModel.referenciaAdd.Numerocel;
+                            referencia.ServiciosId = servicio.Id;
+                            referencia.Estado = true;
+                            _context.Referencia.Add(referencia);
+                            _context.SaveChanges();
+                        }
+                        if(oModel.duracionAdd != null)
+                        {
+                            Tramite tramite = new Tramite();
+                            tramite.Tiempotramite = oModel.duracionAdd.Tiempotramite;
+                            tramite.ServiciosId = servicio.Id;
+                            tramite.Estado = true;
+                            _context.Tramites.Add(tramite);
+                            _context.SaveChanges();
+                            oResponse.success = 1;
+                            oResponse.message = "Tramite registrado con exito";
+                            oResponse.data = tramite;
+
+                          
+                        }
+                        if (oModel.ubicacionAdd != null)
+                        {
+                            Ubicacione ubicacion = new Ubicacione();
+                            ubicacion.Descripcion = oModel.ubicacionAdd.Descripcion;
+                            ubicacion.Imagen = oModel.ubicacionAdd.Imagen;
+                            ubicacion.Video = oModel.ubicacionAdd.Video;
+                            ubicacion.ServiciosId = servicio.Id;
+                            ubicacion.Estado = true;
+                            _context.Ubicaciones.Add(ubicacion);
+                            _context.SaveChanges();
+                        }
+    
+                        if (oModel.requisitoAdd != null)
+                        {
+
+                            Requisito requisito = new Requisito();
+                            requisito.Descripcion = oModel.requisitoAdd.Descripcion;
+                            requisito.ServiciosId = servicio.Id;
+                            requisito.Estado = true;
+                            _context.Requisitos.Add(requisito);
+                            _context.SaveChanges();
+                            if (oModel.requisitoAdd.pasos != null)
+                            {
+                                foreach (var paso in oModel.requisitoAdd.pasos)
+                                {
+                                    PasosRequisito pasosReq = new PasosRequisito();
+                                    pasosReq.Nombre = paso.Nombre;
+                                    pasosReq.RequisitosId = requisito.Id;
+                                    pasosReq.Estado = true;
+                                    _context.PasosRequisitos.Add(pasosReq);
+                                    _context.SaveChanges();
+                                }
+                            }
+                        }
+                        transaction.Commit();
+                        oResponse.success = 1;
+                        oResponse.message = "Tramite registrado con exito";
+                        oResponse.data = servicio;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        oResponse.message = ex.Message;
+                        return BadRequest(oResponse);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
