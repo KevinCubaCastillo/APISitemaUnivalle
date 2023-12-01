@@ -273,7 +273,7 @@ namespace APISitemaUnivalle.Controllers
                     nombre = i.Nombre,
                     modulo = i.Modulo.Nombremodulo,
                     Categoria = i.IdCategoriaNavigation.NombreCategoria,
-                    imagenUrl = i.ImagenUrl,
+                    imagen = i.ImagenUrl,
                     i.Estado,
                     Ubicaciones = i.Ubicaciones,
                     Referencia = i.Referencia,
